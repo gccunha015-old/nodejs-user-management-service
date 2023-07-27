@@ -36,7 +36,7 @@ REST API service to authenticate users.
   <li>✅ Add C4 container diagram</li>
   <li>⬜ Define database schema
     <ul type="none">
-      <li>⬜ users</li>
+      <li>✅ users</li>
       <li>⬜ sessions</li>
       <li>⬜ users_logs</li>
       <li>⬜ sessions_logs</li>
@@ -46,13 +46,13 @@ REST API service to authenticate users.
   </li>
   <li>⬜ Implement, test and document API
     <ul type="none">
-      <li>⬜ Add Swagger on route <code>/docs</code></li>
-      <li>⬜ Component X
+      <li>⬜ User routes
         <ul type="none">
           <li>⬜ Unit testing</li>
-          <li>⬜ Integration testing with Component Y</li>
+          <li>⬜ Integration testing with Server</li>
         </ul>
       </li>
+      <li>⬜ Add Swagger on route <code>/docs</code></li>
     </ul>
   </li>
   <li>⬜ Add C4 deploy diagram</li>

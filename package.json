@@ -2,14 +2,18 @@
   "name": "nodejs-authentication-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-
+    "start": "nodemon src/server.js",
+    "test": "NODE_ENV=test node --test tests"
   },
-  "keywords": [],
   "author": "Gabriel Coelho da Cunha",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }

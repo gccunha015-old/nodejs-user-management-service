@@ -1,0 +1,18 @@
+@protocol = {{$dotenv PROTOCOL}}
+@host = {{$dotenv HOST}}
+@port = {{$dotenv PORT}}
+@baseUrl = {{protocol}}://{{host}}:{{port}}
+
+###
+
+GET {{baseUrl}}
+
+###
+
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "password"
+}
