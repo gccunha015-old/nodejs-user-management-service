@@ -5,7 +5,7 @@ export default class User {
     this.id = randomUUID()
     this.email = email
     this.password = password
-    this.creation_date = new Date()
+    this.created_at = new Date()
     this.options = options
   }
 }
