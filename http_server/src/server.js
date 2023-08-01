@@ -1,5 +1,7 @@
 import http from 'node:http'
+import './config/prototype.js'
 import { env } from './config/env.js'
+import { prisma } from './config/database.js'
 import { handleRequests } from './handleRequests.js'
 
 function createServer(
@@ -13,4 +15,10 @@ function createServer(
     })
 }
 
-export const server = createServer()
+const server = createServer()
+
+server.on('close', async () => {
+  await prisma.$disconnect()
+})
+
+export { server }

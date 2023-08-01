@@ -11,9 +11,11 @@
   "author": "Gabriel Coelho da Cunha",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^5.0.0",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "prisma": "^5.0.0"
   }
 }

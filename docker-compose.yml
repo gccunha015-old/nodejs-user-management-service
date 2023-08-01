@@ -1,20 +1,28 @@
+name: authentication
+
 services:
   database:
     build: database
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${POSTGRES_DATA}
+    volumes:
+      - database:${POSTGRES_DATA}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    networks:
-      - authentication
+#    networks:
+#      - authentication
 
-  # http-server:
-  #   build: http-server
+  # http_server:
+  #   build: http_server
   #   ports:
   #     - 3000:3000
   #   networks:
   #     - authentication
 
-networks:
-  authentication:
+volumes:
+  database:
+
+# networks:
+#   authentication:

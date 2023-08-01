@@ -1,6 +1,6 @@
 # Node.js Authentication Service
 <div align="center">
-  <img src="docs/diagrams/container.png" height="600"
+  <img src="_docs/diagrams/container.png" height="600"
   alt="C4 Container Diagram">
 </div>
 
