@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  @@map("users")
-  id          BigInt   @db.BigInt @id @default(autoincrement())
-  external_id String   @db.Text @unique @default(uuid())
+  id          BigInt   @id @default(autoincrement()) @db.BigInt
+  external_id String   @unique @default(uuid()) @db.Text
   email       String   @db.Text
   password    String   @db.Text
   created_at  DateTime @db.Timestamp(3)
   options     Json?    @db.JsonB
+
+  @@map("users")
 }
