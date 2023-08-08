@@ -1,17 +1,20 @@
 # Node.js Authentication Service
+
 <div align="center">
   <img src="_docs/diagrams/container.png" height="600"
   alt="C4 Container Diagram">
 </div>
 
 ## About
+
 REST API service to authenticate users.
 
 ### Built with
+
 <div align="center">
 
 [![Node.js][nodejs-badge]][nodejs-url]
-[![JavaScript][javascript-badge]][javascript-url]
+[![TypeScript][typescript-badge]][typescript-url]
 [![PostgreSQL][postgresql-badge]][postgresql-url]
 [![Docker][docker-badge]][docker-url]
 
@@ -63,20 +66,22 @@ REST API service to authenticate users.
 
 ## Acknowledgments
 
-* [How to build a Back-end portfolio?]
-* [The C4 model]
-* Diagrams made with [Whimsical]
-* [Node.js][icons8-nodejs], [Docker][icons8-docker], [PostgreSQL][icons8-postgresql] and [Computer][icons8-computer] icons by [Icons8]
-* [Node.js in 2022 || Creating & Testing a Complete Node.js Rest API || No Framework || Erick Wendel][erick-wendel-1]
-* [Best README Template]
+- [How to build a Back-end portfolio?]
+- [The C4 model]
+- Diagrams made with [Whimsical]
+- [Node.js][icons8-nodejs], [Docker][icons8-docker], [PostgreSQL][icons8-postgresql] and [Computer][icons8-computer] icons by [Icons8]
+- [Node.js in 2022 || Creating & Testing a Complete Node.js Rest API || No Framework || Erick Wendel][erick-wendel-1]
+- [Best README Template]
+- [How to create a WebAPI with Node.js, Express and Typescript][luiz-tools-1]
 
 <p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
 
 <!-- Markdown links and images -->
+
 [nodejs-badge]: https://img.shields.io/badge/Node.js-3C873A?style=for-the-badge&logo=node.js&logoColor=white
 [nodejs-url]: https://nodejs.org/en
-[javascript-badge]: https://img.shields.io/badge/JavaScript-FFD600?style=for-the-badge&logo=javascript&logoColor=black
-[javascript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+[typescript-badge]: https://img.shields.io/badge/TypeScript-358EF1?style=for-the-badge&logo=typescript&logoColor=white
+[typescript-url]: https://www.typescriptlang.org/
 [postgresql-badge]: https://img.shields.io/badge/PostgreSQL-0064a5?style=for-the-badge&logo=postgresql&logoColor=white
 [postgresql-url]: https://www.postgresql.org/
 [docker-badge]: https://img.shields.io/badge/Docker-0db7ed?style=for-the-badge&logo=docker&logoColor=white
@@ -85,9 +90,10 @@ REST API service to authenticate users.
 [The C4 model]: https://c4model.com/
 [Whimsical]: https://whimsical.com/
 [icons8-nodejs]: https://icons8.com/icon/hsPbhkOH4FMe/node-js
-[icons8-docker]: https://icons8.com/icon/cdYUlRaag9G9/docker 
+[icons8-docker]: https://icons8.com/icon/cdYUlRaag9G9/docker
 [icons8-postgresql]: https://icons8.com/icon/38561/postgresql
 [icons8-computer]: https://icons8.com/icon/Qh2tCGOAtV52/workstation
 [Icons8]: https://icons8.com
 [erick-wendel-1]: https://www.youtube.com/watch?v=xR4D2bp8_S0
 [Best README Template]: https://github.com/othneildrew/Best-README-Template
+[luiz-tools-1]: https://www.luiztools.com.br/post/como-criar-uma-webapi-com-node-js-express-e-typescript/

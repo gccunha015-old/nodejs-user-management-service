@@ -1,15 +1,15 @@
-import { CreateUserDto } from './dtos/create-user.js'
+import { CreateUserDto } from './dtos/create.js'
 import { userRepository } from './repository'
 
 class UserService {
-  constructor(private readonly repository = userRepository) {}
+  constructor(private readonly _repository = userRepository) {}
 
   async findAll() {
-    return await this.repository.findAll()
+    return await this._repository.findAll()
   }
 
   async create(createUserDto: CreateUserDto) {
-    return await this.repository.create(createUserDto)
+    return await this._repository.create(createUserDto)
   }
 }
 

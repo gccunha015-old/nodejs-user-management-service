@@ -1,25 +1,25 @@
-import { randomUUID } from 'node:crypto';
-import { prisma } from '@config/database';
-import { CreateUserDto } from './dtos/create-user';
+import { randomUUID } from 'node:crypto'
+import { prisma } from '@config/prisma'
+import { CreateUserDto } from './dtos/create'
 
 class UserRepository {
-  constructor(private readonly users = prisma.user) {}
+  constructor(private readonly _users = prisma.user) {}
 
   async findAll() {
-    return await this.users.findMany();
+    return await this._users.findMany()
   }
 
   async create(createUserDto: CreateUserDto) {
-    return await this.users.create({
+    return await this._users.create({
       data: {
         ...createUserDto,
         external_id: randomUUID(),
         created_at: new Date()
       }
-    });
+    })
   }
 }
 
-const userRepository = new UserRepository();
+const userRepository = new UserRepository()
 
-export { userRepository };
+export { userRepository }
