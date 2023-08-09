@@ -9,6 +9,7 @@
     "target": "es2020",
     "paths": {
       "@config/*": ["./src/config/*"],
+      "@error/*": ["./src/error/*"],
       "@users/*": ["./src/users/*"]
     },
     "baseUrl": "."

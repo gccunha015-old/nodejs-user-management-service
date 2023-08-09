@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { BASE_URL } from '@config/utils'
 import { CreateUserDto } from './dtos/create'
 import { userService } from './service'
+import { toErrorWithMessage } from '@error/utils'
 
 class UserController {
   private readonly _baseUrl = `${BASE_URL}/users`
@@ -21,10 +22,10 @@ class UserController {
         .status(StatusCodes.CREATED)
         .json(createdUser)
     } catch (_error: unknown) {
-      if (!(_error instanceof Error)) res.sendStatus(StatusCodes.BAD_GATEWAY)
+      const error = toErrorWithMessage(_error) as Error
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "Couldn't create user" + _error.message })
+        .json({ error: "Couldn't create user" + error.message })
     }
   }
 }

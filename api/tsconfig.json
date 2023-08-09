@@ -25,6 +25,9 @@
       "@config/*": [
         "./src/config/*"
       ],
+      "@error/*": [
+        "./src/error/*"
+      ],
       "@users/*": [
         "./src/users/*"
       ]

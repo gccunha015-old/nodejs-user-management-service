@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto'
-import { prisma } from '@config/prisma'
+import { database } from '@config/database'
 import { CreateUserDto } from './dtos/create'
 
 class UserRepository {
-  constructor(private readonly _users = prisma.user) {}
+  constructor(private readonly _users = database.user) {}
 
   async findAll() {
     return await this._users.findMany()
