@@ -1,4 +1,4 @@
-import { CreateUserDto } from './dtos/create.js'
+import { CreateUserDto } from './dtos/CreateUserDto.js'
 import { userRepository } from './repository'
 
 class UserService {

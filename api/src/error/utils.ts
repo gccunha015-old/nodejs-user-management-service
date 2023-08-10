@@ -1,21 +1,9 @@
 /* Beginning of Source:
   https://kentcdodds.com/blog/get-a-catch-block-error-message-with-typescript
 */
-type ErrorWithMessage = {
-  message: string
-}
-
-function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'message' in error &&
-    typeof (error as Record<string, unknown>).message === 'string'
-  )
-}
-
-function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
-  if (isErrorWithMessage(maybeError)) return maybeError
+function toErrorWithMessage(maybeError: unknown): Error {
+  // [gccunha015] changed to return if it's already an Error
+  if (maybeError instanceof Error) return maybeError
 
   try {
     return new Error(JSON.stringify(maybeError))

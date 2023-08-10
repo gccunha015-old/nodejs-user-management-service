@@ -7,7 +7,7 @@ import './config/prototype'
 import { env } from './config/env'
 import { database } from './config/database'
 import { userRouter } from './users/router'
-import { errorHandler } from './error/handler'
+import { errorHandler } from './error/errorHandler'
 
 database.$connect()
 const app: Express = express()
