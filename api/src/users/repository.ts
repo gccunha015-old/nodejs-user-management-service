@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { database } from '@config/database'
+import { database } from '../config/database'
 import { CreateUserDto } from './dtos/create'
 
 class UserRepository {
