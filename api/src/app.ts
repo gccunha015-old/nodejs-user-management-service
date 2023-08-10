@@ -6,8 +6,8 @@ import 'express-async-errors'
 import './config/prototype'
 import { env } from './config/env'
 import { database } from './config/database'
-import { userRouter } from './users/router'
 import { errorHandler } from './error/errorHandler'
+import { UserRouter } from './users/UserRouter'
 
 database.$connect()
 const app: Express = express()
@@ -16,7 +16,7 @@ app.use(cors())
 app.use(helmet())
 app.use(express.json())
 
-app.use('/users', userRouter)
+app.use('/users', new UserRouter().router)
 app.use(errorHandler)
 
 const server = app.listen(env.PORT, () => {

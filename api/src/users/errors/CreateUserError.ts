@@ -4,7 +4,7 @@ import { HttpError } from '../../error/HttpError'
 class CreateUserError extends HttpError {
   constructor(cause: unknown) {
     super(
-      'Create User Error',
+      'CreateUserError',
       'Missing or malformed fields.',
       StatusCodes.BAD_REQUEST,
       cause

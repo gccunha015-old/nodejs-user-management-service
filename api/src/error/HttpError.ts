@@ -17,10 +17,8 @@ class HttpError implements Error {
   */
   toRFC7807Standard() {
     return {
-      type: `/errors/incorrect-user-pass`,
-      title: `Incorrect username or password.`,
-      detail: `Authentication failed due to incorrect username or password.`,
-      instance: `/login/log/abc123`
+      title: this.name,
+      detail: this.message
     }
   }
 }

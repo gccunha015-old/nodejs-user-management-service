@@ -13,7 +13,6 @@ model User {
   email       String   @db.Text
   password    String   @db.Text
   created_at  DateTime @db.Timestamp(3)
-  options     Json?    @db.JsonB
 
   @@map("users")
 }

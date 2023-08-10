@@ -9,9 +9,16 @@ function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) {
-  if (error instanceof HttpError)
-    res.status(error.httpStatusCode).json(error.toRFC7807Standard())
-  else res.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
+  const httpError =
+    error instanceof HttpError
+      ? error
+      : new HttpError(
+          error.name,
+          error.message,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          error
+        )
+  res.status(httpError.httpStatusCode).json(httpError.toRFC7807Standard())
 }
 
 export { errorHandler }

@@ -5,7 +5,6 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL,
-    "options" JSONB,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
