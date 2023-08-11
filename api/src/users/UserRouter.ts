@@ -1,13 +1,15 @@
 import { Router } from 'express'
 import { UserController } from './UserController'
 
-// const userRouter = Router()
-
 class UserRouter {
   constructor(
     private readonly _controller = new UserController(),
     public readonly router = Router()
   ) {
+    router.get(
+      '/:id',
+      async (req, res) => await this._controller.findById(req, res)
+    )
     router.get(
       '/',
       async (req, res) => await this._controller.findAll(req, res)

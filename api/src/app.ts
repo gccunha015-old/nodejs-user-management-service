@@ -6,7 +6,7 @@ import 'express-async-errors'
 import './config/prototype'
 import { env } from './config/env'
 import { database } from './config/database'
-import { errorHandler } from './error/errorHandler'
+import { errorHandler } from './errors/errorHandler'
 import { UserRouter } from './users/UserRouter'
 
 database.$connect()

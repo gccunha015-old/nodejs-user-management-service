@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
-import { HttpError } from '../../error/HttpError'
+import { HttpError } from '../../errors/HttpError'
 
 class CreateUserError extends HttpError {
   constructor(cause: unknown) {
