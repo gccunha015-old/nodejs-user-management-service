@@ -5,9 +5,10 @@ import helmet from 'helmet'
 import 'express-async-errors'
 import './config/prototype'
 import { env } from './config/env'
+import { BASE_URL } from './config/utils'
 import { database } from './config/database'
 import { errorHandler } from './errors/errorHandler'
-import { UserRouter } from './users/UserRouter'
+import { router } from './router'
 
 database.$connect()
 const app: Express = express()
@@ -16,14 +17,12 @@ app.use(cors())
 app.use(helmet())
 app.use(express.json())
 
-app.use('/users', new UserRouter().router)
+app.use(`/${env.API_VERSION}`, router)
 app.use(errorHandler)
 
 const server = app.listen(env.PORT, () => {
   /* eslint-disable-next-line no-console */
-  console.log(
-    `[app] Server is running at ${env.PROTOCOL}://${env.HOST}:${env.PORT}`
-  )
+  console.log(`[app] Server is running at ${BASE_URL}`)
 })
 
 function gracefulShutdown() {

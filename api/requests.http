@@ -1,14 +1,15 @@
 @protocol = {{$dotenv PROTOCOL}}
 @host = {{$dotenv HOST}}
 @port = {{$dotenv PORT}}
-@baseUrl = {{protocol}}://{{host}}:{{port}}
+@apiVersion = {{$dotenv API_VERSION}}
+@baseUrl = {{protocol}}://{{host}}:{{port}}/{{apiVersion}}
 ###
 GET {{baseUrl}}
 ###
 @users = {{baseUrl}}/users
 GET {{users}}
 ###
-@id = 18147d68-c4fe-4892-9cdc-6d4a16ecabe8
+@id = d1524249-59ad-4aea-b492-0dd1ff54e227
 GET {{users}}/{{id}}
 ###
 POST {{users}}

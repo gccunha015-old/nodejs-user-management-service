@@ -73,6 +73,9 @@ REST API service to authenticate users.
 - [Node.js in 2022 || Creating & Testing a Complete Node.js Rest API || No Framework || Erick Wendel][erick-wendel-1]
 - [Best README Template]
 - [How to create a WebAPI with Node.js, Express and Typescript][luiz-tools-1]
+- [Build Node.js User Authentication - Password Login][web-dev-simplified-1]
+
+[web-dev-simplified-1]: https://www.youtube.com/watch?v=Ud5xKCYQTjM
 
 <p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
 

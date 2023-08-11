@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { BASE_URL } from '../config/utils'
-import { CreateUserDto } from './dtos/CreateUserDto'
-import { UserService } from './UserService'
-import { CreateUserError } from './errors/CreateUserError'
-import { FindUserByIdError } from './errors/FindUserByIdError'
+import { CreateUserDto } from './dtos/CreateSessionDto'
+import { UserService } from './SessionService'
+import { CreateUserError } from './errors/CreateSessionError'
+import { FindUserByIdError } from './errors/FindSessionError'
 import { encrypt } from '../utils'
 
 class UserController {
