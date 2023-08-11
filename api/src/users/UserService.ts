@@ -1,5 +1,6 @@
 import { CreateUserDto } from './dtos/CreateUserDto'
 import { FindUserDto } from './dtos/FindUserDto'
+import { UserMapper } from './UserMapper'
 import { UserRepository } from './UserRepository'
 
 class UserService {
@@ -7,16 +8,18 @@ class UserService {
 
   async findAll(): Promise<FindUserDto[]> {
     return (await this._repository.findAll()).map((user) =>
-      user.mapToFindUserDto()
+      UserMapper.fromUserToFindUserDto(user)
     )
   }
 
   async findById(id: string): Promise<FindUserDto> {
-    return (await this._repository.findById(id)).mapToFindUserDto()
+    return UserMapper.fromUserToFindUserDto(await this._repository.findById(id))
   }
 
   async create(createUserDto: CreateUserDto): Promise<FindUserDto> {
-    return (await this._repository.create(createUserDto)).mapToFindUserDto()
+    return UserMapper.fromUserToFindUserDto(
+      await this._repository.create(createUserDto)
+    )
   }
 }
 

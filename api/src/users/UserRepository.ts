@@ -7,27 +7,23 @@ class UserRepository {
   constructor(private readonly _users = database.user) {}
 
   async findAll(): Promise<User[]> {
-    return (await this._users.findMany()).map((user) => new User(user))
+    return await this._users.findMany()
   }
 
   async findById(id: string): Promise<User> {
-    return new User(
-      await this._users.findUniqueOrThrow({
-        where: { external_id: id }
-      })
-    )
+    return await this._users.findUniqueOrThrow({
+      where: { external_id: id }
+    })
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    return new User(
-      await this._users.create({
-        data: {
-          ...createUserDto,
-          external_id: randomUUID(),
-          created_at: new Date()
-        }
-      })
-    )
+    return await this._users.create({
+      data: {
+        ...createUserDto,
+        external_id: randomUUID(),
+        created_at: new Date()
+      }
+    })
   }
 }
 
