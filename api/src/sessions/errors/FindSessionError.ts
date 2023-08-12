@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes'
 import { HttpError } from '../../errors/HttpError'
 
-class FindUserByIdError extends HttpError {
+class FindSessionError extends HttpError {
   constructor(cause: unknown) {
-    super('FindUserByIdError', 'Invalid id.', StatusCodes.NOT_FOUND, cause)
+    super('FindSessionError', 'Invalid id.', StatusCodes.NOT_FOUND, cause)
   }
 }
 
-export { FindUserByIdError }
+export { FindSessionError }

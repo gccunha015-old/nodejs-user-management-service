@@ -1,6 +1,6 @@
-interface CreateUserDto {
+interface CreateSessionDto {
   email: string
   password: string
 }
 
-export { CreateUserDto }
+export { CreateSessionDto }

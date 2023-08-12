@@ -1,7 +1,7 @@
 /* Beginning of Source:
   https://kentcdodds.com/blog/get-a-catch-block-error-message-with-typescript
 */
-function toErrorWithMessage(maybeError: unknown): Error {
+export function toErrorWithMessage(maybeError: unknown): Error {
   // [gccunha015] changed to return if it's already an Error
   if (maybeError instanceof Error) return maybeError
 
@@ -16,5 +16,3 @@ function toErrorWithMessage(maybeError: unknown): Error {
 /* End of source:
   https://kentcdodds.com/blog/get-a-catch-block-error-message-with-typescript
 */
-
-export { toErrorWithMessage }

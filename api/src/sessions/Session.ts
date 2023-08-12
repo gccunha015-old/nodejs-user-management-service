@@ -1,9 +1,9 @@
-import { CreateUserDto } from './dtos/CreateSessionDto'
-
-interface User extends CreateUserDto {
+interface Session {
   id: bigint
   external_id: string
+  user_id: bigint
   created_at: Date
+  expires_at: Date
 }
 
-export { User }
+export { Session }

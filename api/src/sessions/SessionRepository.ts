@@ -1,25 +1,25 @@
 import { randomUUID } from 'node:crypto'
 import { database } from '../config/database'
-import { CreateUserDto } from './dtos/CreateSessionDto'
-import { User } from './Session'
+import { CreateSessionDto } from './dtos'
+import { Session } from './Session'
 
-class UserRepository {
-  constructor(private readonly _users = database.user) {}
+class SessionRepository {
+  constructor(private readonly _sessions = database.session) {}
 
-  async findById(id: string): Promise<User> {
-    return await this._users.findUniqueOrThrow({
-      where: { external_id: id }
-    })
-  }
+  // async findById(id: string): Promise<User> {
+  //   return await this._sessions.findUniqueOrThrow({
+  //     where: { external_id: id }
+  //   })
+  // }
 
-  async findAll(): Promise<User[]> {
-    return await this._users.findMany()
-  }
+  // async findAll(): Promise<User[]> {
+  //   return await this._sessions.findMany()
+  // }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    return await this._users.create({
+  async create(createSessionDto: CreateSessionDto): Promise<Session> {
+    return await this._sessions.create({
       data: {
-        ...createUserDto,
+        ...createSessionDto,
         external_id: randomUUID(),
         created_at: new Date()
       }
@@ -27,4 +27,4 @@ class UserRepository {
   }
 }
 
-export { UserRepository }
+export { SessionRepository }

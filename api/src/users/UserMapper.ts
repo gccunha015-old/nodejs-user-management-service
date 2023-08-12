@@ -1,14 +1,15 @@
+import { UUID } from 'node:crypto'
 import { User } from './User'
-import { FindUserDto } from './dtos/FindUserDto'
+import { CreateUserResponseDto } from './dtos'
 
 class UserMapper {
-  public static fromUserToFindUserDto({
+  public static fromUserToCreateUserResponseDto({
     external_id,
     ...user
-  }: User): FindUserDto {
+  }: User): CreateUserResponseDto {
     return {
       ...user,
-      id: external_id
+      id: external_id as UUID
     }
   }
 }

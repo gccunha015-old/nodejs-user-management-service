@@ -1,46 +1,49 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { BASE_URL } from '../config/utils'
-import { CreateUserDto } from './dtos/CreateSessionDto'
-import { UserService } from './SessionService'
-import { CreateUserError } from './errors/CreateSessionError'
-import { FindUserByIdError } from './errors/FindSessionError'
+import { CreateSessionDto } from './dtos/CreateSessionDto'
+import { SessionService } from './SessionService'
 import { encrypt } from '../utils'
+import { UserService } from '../users/UserService'
+import { CreateSessionError } from './errors'
 
-class UserController {
-  private readonly _baseUrl = `${BASE_URL}/users`
-  constructor(private readonly _service = new UserService()) {}
+class SessionController {
+  private readonly _baseUrl = `${BASE_URL}/sessions`
+  constructor(
+    private readonly _service = new SessionService(),
+    private readonly _userService = new UserService()
+  ) {}
 
-  async findById(req: Request, res: Response): Promise<void> {
-    try {
-      const id = req.params.id
-      const user = await this._service.findById(id)
-      res.status(StatusCodes.OK).json(user)
-    } catch (error: unknown) {
-      throw new FindUserByIdError(error)
-    }
-  }
+  // async findById(req: Request, res: Response): Promise<void> {
+  //   try {
+  //     const id = req.params.id
+  //     const user = await this._service.findById(id)
+  //     res.status(StatusCodes.OK).json(user)
+  //   } catch (error: unknown) {
+  //     throw new FindUserByIdError(error)
+  //   }
+  // }
 
-  async findAll(_req: Request, res: Response): Promise<void> {
-    const users = await this._service.findAll()
-    res.status(StatusCodes.OK).json(users)
-  }
+  // async findAll(_req: Request, res: Response): Promise<void> {
+  //   const users = await this._service.findAll()
+  //   res.status(StatusCodes.OK).json(users)
+  // }
 
   async create(req: Request, res: Response): Promise<void> {
     try {
-      const createUserDto = {
+      const createSessionDto = {
         email: req.body.email as string,
         password: await encrypt(req.body.password as string)
-      } as CreateUserDto
-      const user = await this._service.create(createUserDto)
+      } as CreateSessionDto
+      const session = await this._service.create(createSessionDto)
       res
-        .location(`${this._baseUrl}/${user.id}`)
+        .location(`${this._baseUrl}/${session.id}`)
         .status(StatusCodes.CREATED)
-        .json(user)
+        .json(session)
     } catch (error: unknown) {
-      throw new CreateUserError(error)
+      throw new CreateSessionError(error)
     }
   }
 }
 
-export { UserController }
+export { SessionController }

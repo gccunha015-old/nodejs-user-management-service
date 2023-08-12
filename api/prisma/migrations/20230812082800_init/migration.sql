@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" BIGSERIAL NOT NULL,
-    "external_id" TEXT NOT NULL,
+    "external_id" UUID NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "sessions" (
     "id" BIGSERIAL NOT NULL,
-    "external_id" TEXT NOT NULL,
+    "external_id" UUID NOT NULL,
     "user_id" BIGINT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL,
     "expires_at" TIMESTAMP(3) NOT NULL,

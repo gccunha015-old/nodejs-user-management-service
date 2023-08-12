@@ -9,7 +9,7 @@ GET {{baseUrl}}
 @users = {{baseUrl}}/users
 GET {{users}}
 ###
-@id = d1524249-59ad-4aea-b492-0dd1ff54e227
+@id = 68d52af5-398d-4a1b-9a9b-7347ebaf6473
 GET {{users}}/{{id}}
 ###
 POST {{users}}

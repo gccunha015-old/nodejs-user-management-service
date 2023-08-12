@@ -1,42 +1,44 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { BASE_URL } from '../config/utils'
-import { CreateUserDto } from './dtos/CreateUserDto'
+import { CreateUserRequestDto, CreateUserResponseDto } from './dtos'
 import { UserService } from './UserService'
-import { CreateUserError } from './errors/CreateUserError'
-import { FindUserByIdError } from './errors/FindUserByIdError'
+import { CreateUserError, FindUserByIdError } from './errors'
 import { encrypt } from '../utils'
+import { UUID } from 'node:crypto'
 
 class UserController {
   private readonly _baseUrl = `${BASE_URL}/users`
   constructor(private readonly _service = new UserService()) {}
 
-  async findById(req: Request, res: Response): Promise<void> {
-    try {
-      const id = req.params.id
-      const user = await this._service.findById(id)
-      res.status(StatusCodes.OK).json(user)
-    } catch (error: unknown) {
-      throw new FindUserByIdError(error)
-    }
-  }
+  // async findById(req: Request, res: Response): Promise<void> {
+  //   try {
+  //     const id = req.params.id as UUID
+  //     const user = await this._service.findById(id)
+  //     res.status(StatusCodes.OK).json(user)
+  //   } catch (error: unknown) {
+  //     throw new FindUserByIdError(error)
+  //   }
+  // }
 
-  async findAll(_req: Request, res: Response): Promise<void> {
-    const users = await this._service.findAll()
-    res.status(StatusCodes.OK).json(users)
-  }
+  // async findAll(_req: Request, res: Response): Promise<void> {
+  //   const users = await this._service.findAll()
+  //   res.status(StatusCodes.OK).json(users)
+  // }
 
   async create(req: Request, res: Response): Promise<void> {
     try {
-      const createUserDto = {
+      const newUser: CreateUserRequestDto = {
         email: req.body.email as string,
         password: await encrypt(req.body.password as string)
-      } as CreateUserDto
-      const user = await this._service.create(createUserDto)
+      }
+      const createdUser: CreateUserResponseDto = await this._service.create(
+        newUser
+      )
       res
-        .location(`${this._baseUrl}/${user.id}`)
+        .location(`${this._baseUrl}/${createdUser.id}`)
         .status(StatusCodes.CREATED)
-        .json(user)
+        .json(createdUser)
     } catch (error: unknown) {
       throw new CreateUserError(error)
     }

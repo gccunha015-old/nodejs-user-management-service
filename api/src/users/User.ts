@@ -1,6 +1,6 @@
-import { CreateUserDto } from './dtos/CreateUserDto'
+import { CreateUserRequestDto } from './dtos'
 
-interface User extends CreateUserDto {
+interface User extends CreateUserRequestDto {
   id: bigint
   external_id: string
   created_at: Date

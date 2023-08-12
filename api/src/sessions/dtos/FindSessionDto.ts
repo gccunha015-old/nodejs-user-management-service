@@ -1,8 +1,8 @@
-import { CreateUserDto } from './CreateSessionDto'
+import { CreateSessionDto } from './CreateSessionDto'
 
-interface FindUserDto extends CreateUserDto {
+interface FindSessionDto extends CreateSessionDto {
   id: string
   created_at: Date
 }
 
-export { FindUserDto }
+export { FindSessionDto }

@@ -3,7 +3,7 @@ import { FindUserDto } from './dtos/FindSessionDto'
 import { UserMapper } from './SessionMapper'
 import { UserRepository } from './SessionRepository'
 
-class UserService {
+class SessionService {
   constructor(private readonly _repository = new UserRepository()) {}
 
   async findById(id: string): Promise<FindUserDto> {
@@ -23,4 +23,4 @@ class UserService {
   }
 }
 
-export { UserService }
+export { SessionService }

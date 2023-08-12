@@ -1,4 +1,4 @@
-import { CreateUserDto } from './CreateUserDto'
+import { CreateUserDto } from './CreateUserRequestDto'
 
 interface FindUserDto extends CreateUserDto {
   id: string

@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id          BigInt   @id @default(autoincrement()) @db.BigInt
-  external_id String   @unique @default(uuid()) @db.Text
+  external_id String   @unique @default(uuid()) @db.Uuid
   email       String   @unique @db.Text
   password    String   @db.Text
   created_at  DateTime @db.Timestamp(3)
@@ -21,7 +21,7 @@ model User {
 
 model Session {
   id          BigInt   @id @default(autoincrement()) @db.BigInt
-  external_id String   @unique @default(uuid()) @db.Text
+  external_id String   @unique @default(uuid()) @db.Uuid
   user_id     BigInt   @db.BigInt
   created_at  DateTime @db.Timestamp(3)
   expires_at  DateTime @db.Timestamp(3)

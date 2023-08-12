@@ -1,25 +1,25 @@
-import { randomUUID } from 'node:crypto'
+import { UUID, randomUUID } from 'node:crypto'
 import { database } from '../config/database'
-import { CreateUserDto } from './dtos/CreateUserDto'
+import { CreateUserRequestDto } from './dtos'
 import { User } from './User'
 
 class UserRepository {
   constructor(private readonly _users = database.user) {}
 
-  async findById(id: string): Promise<User> {
-    return await this._users.findUniqueOrThrow({
-      where: { external_id: id }
-    })
-  }
+  // async findById(id: UUID): Promise<User> {
+  //   return await this._users.findUniqueOrThrow({
+  //     where: { external_id: id }
+  //   })
+  // }
 
-  async findAll(): Promise<User[]> {
-    return await this._users.findMany()
-  }
+  // async findAll(): Promise<User[]> {
+  //   return await this._users.findMany()
+  // }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(newUser: CreateUserRequestDto): Promise<User> {
     return await this._users.create({
       data: {
-        ...createUserDto,
+        ...newUser,
         external_id: randomUUID(),
         created_at: new Date()
       }

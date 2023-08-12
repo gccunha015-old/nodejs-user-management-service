@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes'
 import { HttpError } from '../../errors/HttpError'
 
-class CreateUserError extends HttpError {
+class CreateSessionError extends HttpError {
   constructor(cause: unknown) {
     super(
-      'CreateUserError',
+      'CreateSessionError',
       'Missing or malformed fields.',
       StatusCodes.BAD_REQUEST,
       cause
@@ -12,4 +12,4 @@ class CreateUserError extends HttpError {
   }
 }
 
-export { CreateUserError }
+export { CreateSessionError }
