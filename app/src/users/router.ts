@@ -1,22 +1,13 @@
-import bcrypt from "bcrypt";
 import { Router } from "express";
-import { User } from "./model";
+import { usersController } from "./controller";
 
-const usersRouter = Router();
-const users: User[] = [];
+export const usersRouter = Router();
 
-usersRouter.get("/", (req, res) => res.json(users));
-usersRouter.post("/", async (req, res) => {
-  try {
-    const { name, password } = req.body;
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const user = { name, password: hashedPassword };
-    users.push(user);
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-export { usersRouter, users };
+usersRouter.get(
+  "/",
+  async (req, res) => await usersController.findAll(req, res)
+);
+usersRouter.post(
+  "/",
+  async (req, res) => await usersController.create(req, res)
+);

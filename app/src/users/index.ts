@@ -1,2 +1,2 @@
-export { User } from "./model";
-export { usersRouter, users } from "./router";
+export * from "./model";
+export * from "./router";

@@ -1,1 +1,1 @@
-export { sessionsRouter, sessions } from "./router";
+export * from "./router";

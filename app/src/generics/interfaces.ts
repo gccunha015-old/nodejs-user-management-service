@@ -5,15 +5,19 @@ interface IRead<ID, ENTITY> {
   findById(id: ID): Promise<ENTITY | undefined>;
 }
 
-interface IWrite<NEW_ENTITY, ENTITY> {
+interface IWrite<ENTITY, NEW_ENTITY> {
   create(newEntity: NEW_ENTITY): Promise<ENTITY | undefined>;
 }
 
-export interface IRepository<ID, ENTITY> extends IRead<ID, ENTITY> {}
+interface IReadWrite<ID, ENTITY, NEW_ENTITY>
+  extends IRead<ID, ENTITY>,
+    IWrite<ENTITY, NEW_ENTITY> {}
+
+export interface IRepository<ID, ENTITY>
+  extends IReadWrite<ID, ENTITY, ENTITY> {}
 
 export interface IService<ID, FIND_DTO, CREATE_DTO>
-  extends IRead<ID, FIND_DTO>,
-    IWrite<CREATE_DTO, FIND_DTO> {}
+  extends IReadWrite<ID, FIND_DTO, CREATE_DTO> {}
 
 export interface IController {
   findAll(req: Request, res: Response, nex?: NextFunction): Promise<void>;
