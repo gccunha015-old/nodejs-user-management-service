@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import { Router } from "express";
+import { User } from "./model";
 
 const usersRouter = Router();
-const users = [];
+const users: User[] = [];
 
 usersRouter.get("/", (req, res) => res.json(users));
 usersRouter.post("/", async (req, res) => {

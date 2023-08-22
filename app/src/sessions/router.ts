@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import { Router } from "express";
-import { users } from "../users/index.js";
+import { User, users } from "../users";
 
-const sessionsRouter = Router();
-const sessions = [];
+const sessionsRouter: Router = Router();
+const sessions: User[] = [];
 
 sessionsRouter.post("/", async (req, res, nex) => {
   const { name, password } = req.body;
