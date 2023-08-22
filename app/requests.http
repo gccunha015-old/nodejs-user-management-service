@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:3000
+
+###
+@users = {{baseUrl}}/users
+GET {{users}}
+
+###
+POST {{users}}
+Content-Type: application/json
+
+{
+  "name": "test",
+  "password": "pass"
+}
+
+###
+@sessions = {{baseUrl}}/sessions
+POST {{sessions}}
+Content-Type: application/json
+
+{
+  "name": "test",
+  "password": "pass"
+}

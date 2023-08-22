@@ -74,6 +74,8 @@ REST API service to authenticate users.
 - [Best README Template]
 - [How to create a WebAPI with Node.js, Express and Typescript][luiz-tools-1]
 - [Build Node.js User Authentication - Password Login][web-dev-simplified-1]
+- [How to structure an Express.js REST API with best practices][treblle-1]
+- [Node Best Practices][goldbergyoni-1]
 
 <p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
 
@@ -99,3 +101,5 @@ REST API service to authenticate users.
 [Best README Template]: https://github.com/othneildrew/Best-README-Template
 [luiz-tools-1]: https://www.luiztools.com.br/post/como-criar-uma-webapi-com-node-js-express-e-typescript/
 [web-dev-simplified-1]: https://www.youtube.com/watch?v=Ud5xKCYQTjM
+[treblle-1]: https://blog.treblle.com/egergr/
+[goldbergyoni-1]: https://github.com/goldbergyoni/nodebestpractices
