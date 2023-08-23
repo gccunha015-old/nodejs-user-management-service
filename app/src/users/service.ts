@@ -7,7 +7,7 @@ import { usersRepository } from "./repository";
 export class UsersService implements IUsersService {
   private readonly _repository: IUsersRepository;
 
-  constructor(repository: IUsersRepository) {
+  constructor(repository: IUsersRepository = usersRepository) {
     this._repository = repository;
   }
 
@@ -36,4 +36,4 @@ export class UsersService implements IUsersService {
   }
 }
 
-export const usersService = new UsersService(usersRepository);
+export const usersService = new UsersService();

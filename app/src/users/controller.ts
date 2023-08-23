@@ -8,7 +8,7 @@ export class UserController implements IUsersController {
   private readonly _baseUrl = `${BASE_URL}/users`;
   private readonly _service: IUsersService;
 
-  constructor(service: IUsersService) {
+  constructor(service: IUsersService = usersService) {
     this._service = service;
   }
 
@@ -42,4 +42,4 @@ export class UserController implements IUsersController {
   }
 }
 
-export const usersController = new UserController(usersService);
+export const usersController = new UserController();

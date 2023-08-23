@@ -12,5 +12,6 @@
     "skipLibCheck": true,
     "types": ["node", "jest"]
   },
-  "ts-node": { "transpileOnly": true }
+  "ts-node": { "transpileOnly": true },
+  "exclude": ["jest.config.ts"]
 }

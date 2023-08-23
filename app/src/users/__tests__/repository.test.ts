@@ -1,10 +1,7 @@
-import type * as RepositoryModule from "../repository";
+import { UsersInMemoryRepository } from "../repository";
 import { User } from "../model";
 
-const { InMemoryUsersRepository } =
-  jest.requireActual<typeof RepositoryModule>("../repository");
-
-describe("InMemoryUsersRepository", () => {
+describe("UsersInMemoryRepository", () => {
   const user: User = {
     externalId: "1",
     email: "test",
@@ -13,7 +10,7 @@ describe("InMemoryUsersRepository", () => {
   };
 
   describe("create", () => {
-    const repository = new InMemoryUsersRepository();
+    const repository = new UsersInMemoryRepository();
 
     it("should create a user", async () => {
       const created = await repository.create(user);
@@ -22,7 +19,7 @@ describe("InMemoryUsersRepository", () => {
   });
 
   describe("findById", () => {
-    const repository = new InMemoryUsersRepository();
+    const repository = new UsersInMemoryRepository();
 
     beforeAll(async () => {
       await repository.create(user);
@@ -35,6 +32,18 @@ describe("InMemoryUsersRepository", () => {
 
     it("should not find user", async () => {
       await expect(repository.findById("2")).rejects.toThrowError();
+    });
+  });
+
+  describe("findAll", () => {
+    const repository = new UsersInMemoryRepository();
+
+    it("should find all users", async () => {
+      await repository.create(user);
+      await repository.create({ ...user, externalId: "2" } as User);
+
+      const found = await repository.findAll();
+      expect(found).toHaveLength(2);
     });
   });
 });

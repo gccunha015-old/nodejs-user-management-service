@@ -1,7 +1,7 @@
 import { User } from "./model";
 import { IUsersRepository } from "./interfaces";
 
-export class InMemoryUsersRepository implements IUsersRepository {
+export class UsersInMemoryRepository implements IUsersRepository {
   private readonly _users: User[] = [];
 
   async findById(id: string): Promise<User> {
@@ -22,4 +22,4 @@ export class InMemoryUsersRepository implements IUsersRepository {
   }
 }
 
-export const usersRepository = new InMemoryUsersRepository();
+export const usersRepository = new UsersInMemoryRepository();

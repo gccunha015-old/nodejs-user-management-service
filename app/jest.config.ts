@@ -4,7 +4,8 @@ const config: Config.InitialOptions = {
   preset: "ts-jest",
   testEnvironment: "node",
   verbose: true,
-  automock: true,
+  automock: false,
+  // collectCoverage: true
 };
 
 export default config;
