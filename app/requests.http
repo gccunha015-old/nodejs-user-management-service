@@ -5,6 +5,10 @@
 GET {{users}}
 
 ###
+@userId = 85c8bceb-a950-4990-ab12-421ffb989a81
+GET {{users}}/{{userId}}
+
+###
 POST {{users}}
 Content-Type: application/json
 

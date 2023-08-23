@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from "express";
 
 interface IRead<ID, ENTITY> {
   findAll(): Promise<ENTITY[]>;
-  findById(id: ID): Promise<ENTITY | undefined>;
+  findById(id: ID): Promise<ENTITY>;
 }
 
 interface IWrite<ENTITY, NEW_ENTITY> {
-  create(newEntity: NEW_ENTITY): Promise<ENTITY | undefined>;
+  create(newEntity: NEW_ENTITY): Promise<ENTITY>;
 }
 
 interface IReadWrite<ID, ENTITY, NEW_ENTITY>

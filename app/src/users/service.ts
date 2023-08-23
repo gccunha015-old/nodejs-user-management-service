@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { FindUserDTO, FindUserDTOSchema, CreateUserDTO } from "./dtos";
-import { IUserService, IUsersRepository } from "./interfaces";
+import { IUsersService, IUsersRepository } from "./interfaces";
 import { UserSchema } from "./model";
 import { usersRepository } from "./repository";
 
-export class UsersService implements IUserService {
+export class UsersService implements IUsersService {
   private readonly _repository: IUsersRepository;
 
   constructor(repository: IUsersRepository) {
