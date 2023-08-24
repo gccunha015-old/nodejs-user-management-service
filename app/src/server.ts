@@ -1,7 +1,8 @@
-import { env } from "node:process";
-import "./config";
+import { env, setUpProcessEventsHandling } from "./config";
 import { app } from "./express";
 
-app.listen(env.PORT, () => {
+const server = app.listen(env.PORT, () => {
   console.log(`Server listening on ${env.PROTOCOL}://${env.HOST}:${env.PORT}`);
 });
+
+setUpProcessEventsHandling(server);

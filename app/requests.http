@@ -5,7 +5,7 @@
 GET {{users}}
 
 ###
-@userId = 85c8bceb-a950-4990-ab12-421ffb989a81
+@userId = 48b06345-802c-4155-95f2-8c3594671805
 GET {{users}}/{{userId}}
 
 ###
@@ -23,6 +23,6 @@ POST {{sessions}}
 Content-Type: application/json
 
 {
-  "name": "test",
+  "email": "test@test.com",
   "password": "pass"
 }

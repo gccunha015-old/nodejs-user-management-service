@@ -1,3 +1,3 @@
-import { IController } from "../../generics";
+import { IController } from "../../../generics";
 
 export interface IUsersController extends IController {}

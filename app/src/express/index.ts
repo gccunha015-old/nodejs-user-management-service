@@ -1,8 +1,7 @@
-import express, { Express } from "express";
-import { usersRouter } from "../users";
-// import { sessionsRouter } from "../sessions";
+import express from "express";
+import { usersRouter } from "../features";
 
-const app: Express = express();
+const app = express();
 
 app.use(express.json());
 app.use("/users", usersRouter);
