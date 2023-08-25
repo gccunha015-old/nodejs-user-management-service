@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { FindUserDTO, FindUserDTOSchema, CreateUserDTO } from "./dtos";
 import { IUsersService, IUsersRepository } from "./interfaces";
 import { UserSchema } from "./model";
@@ -25,11 +24,7 @@ export class UsersService implements IUsersService {
   }
 
   async create(newUserDTO: CreateUserDTO): Promise<FindUserDTO> {
-    const newUser = await UserSchema.parseAsync({
-      ...newUserDTO,
-      externalId: randomUUID(),
-      createdAt: new Date(),
-    });
+    const newUser = await UserSchema.parseAsync(newUserDTO);
     return await FindUserDTOSchema.parseAsync(
       await this._repository.create(newUser)
     );

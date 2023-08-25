@@ -1,13 +1,11 @@
 import { UsersInMemoryRepository } from "../repository";
-import { User } from "../model";
+import { User, UserSchema } from "../model";
 
 describe("UsersInMemoryRepository", () => {
-  const user: User = {
-    externalId: "1",
-    email: "test",
+  const user: User = UserSchema.parse({
+    email: "test@test.com",
     password: "pass",
-    createdAt: new Date(),
-  };
+  });
 
   describe("create", () => {
     const repository = new UsersInMemoryRepository();
