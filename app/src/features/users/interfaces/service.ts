@@ -1,5 +1,5 @@
 import { IService } from "../../../generics";
-import { CreateUserDTO, FindUserDTO } from "../dtos";
+import { CreateUserDto } from "../dtos";
+import { User } from "../model";
 
-export interface IUsersService
-  extends IService<string, FindUserDTO, CreateUserDTO> {}
+export interface IUsersService extends IService<string, User, CreateUserDto> {}

@@ -5,7 +5,7 @@ export const UserSchema = z
   .object({
     externalId: z.string().uuid().default(randomUUID()),
     email: z.string().email(),
-    password: z.string(),
+    password: z.string().min(8),
     createdAt: z.date().default(new Date()),
   })
   .strict();

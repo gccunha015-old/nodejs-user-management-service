@@ -1,47 +1,69 @@
 import { UsersInMemoryRepository } from "../repository";
-import { User, UserSchema } from "../model";
+import { User } from "../model";
+
+jest.unmock("../repository");
 
 describe("UsersInMemoryRepository", () => {
-  const user: User = UserSchema.parse({
-    email: "test@test.com",
-    password: "pass",
-  });
+  const users: User[] = [];
+  const repository = new UsersInMemoryRepository(users);
 
   describe("create", () => {
-    const repository = new UsersInMemoryRepository();
-
     it("should create a user", async () => {
-      const created = await repository.create(user);
-      expect(created).toBe(user);
+      const created = await repository.create({
+        externalId: "1",
+        email: "test",
+        password: "pass",
+        createdAt: new Date(),
+      });
+      expect(created).toHaveProperty("externalId", "1");
+      expect(created).toHaveProperty("email", "test");
+      expect(created).toHaveProperty("password", "pass");
+      expect(created).toHaveProperty("createdAt");
     });
   });
 
   describe("findById", () => {
-    const repository = new UsersInMemoryRepository();
-
-    beforeAll(async () => {
-      await repository.create(user);
-    });
-
     it("should find user", async () => {
-      const found = await repository.findById(user.externalId);
-      expect(found).toBe(user);
+      users.push({
+        externalId: "1",
+        email: "test",
+        password: "pass",
+        createdAt: new Date(),
+      });
+
+      const found = await repository.findById("1");
+      expect(found).toHaveProperty("externalId", "1");
+      expect(found).toHaveProperty("email", "test");
+      expect(found).toHaveProperty("password", "pass");
+      expect(found).toHaveProperty("createdAt");
     });
 
     it("should not find user", async () => {
-      await expect(repository.findById("2")).rejects.toThrowError();
+      await expect(repository.findById("1")).rejects.toThrowError();
     });
   });
 
   describe("findAll", () => {
-    const repository = new UsersInMemoryRepository();
-
     it("should find all users", async () => {
-      await repository.create(user);
-      await repository.create({ ...user, externalId: "2" } as User);
+      users.push({
+        externalId: "1",
+        email: "test",
+        password: "pass",
+        createdAt: new Date(),
+      });
+      users.push({
+        externalId: "2",
+        email: "test",
+        password: "pass",
+        createdAt: new Date(),
+      });
 
       const found = await repository.findAll();
       expect(found).toHaveLength(2);
     });
+  });
+
+  afterEach(() => {
+    users.splice(0, users.length);
   });
 });

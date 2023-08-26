@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
+import { BASE_URL, UuidSchema } from "../../utils";
 import { IUsersController, IUsersService } from "./interfaces";
-import { CreateUserDTOSchema } from "./dtos";
+import { CreateUserDtoSchema, FindUserDtoSchema } from "./dtos";
 import { usersService } from "./service";
-import { BASE_URL, hashString } from "../../utils";
 
 export class UserController implements IUsersController {
   private readonly _baseUrl = `${BASE_URL}/users`;
@@ -15,7 +15,10 @@ export class UserController implements IUsersController {
   async findAll(req: Request, res: Response, nex: NextFunction): Promise<void> {
     try {
       const users = await this._service.findAll();
-      res.status(200).send(users);
+      const findUserDtos = await Promise.all(
+        users.map((user) => FindUserDtoSchema.parseAsync(user))
+      );
+      res.status(200).send(findUserDtos);
     } catch (error) {
       nex(error);
     }
@@ -27,8 +30,10 @@ export class UserController implements IUsersController {
     nex: NextFunction
   ): Promise<void> {
     try {
-      const user = await this._service.findById(req.params.id);
-      res.status(200).send(user);
+      const id = await UuidSchema.parseAsync(req.params.id);
+      const user = await this._service.findById(id);
+      const findUserDto = await FindUserDtoSchema.parseAsync(user);
+      res.status(200).send(findUserDto);
     } catch (error) {
       nex(error);
     }
@@ -36,10 +41,13 @@ export class UserController implements IUsersController {
 
   async create(req: Request, res: Response, nex: NextFunction): Promise<void> {
     try {
-      const newUser = await CreateUserDTOSchema.parseAsync(req.body);
-      newUser.password = await hashString(newUser.password);
-      const user = await this._service.create(newUser);
-      res.status(201).location(`${this._baseUrl}/${user.id}`).json(user);
+      const createUserDto = await CreateUserDtoSchema.parseAsync(req.body);
+      const user = await this._service.create(createUserDto);
+      const findUserDto = await FindUserDtoSchema.parseAsync(user);
+      res
+        .status(201)
+        .location(`${this._baseUrl}/${findUserDto.id}`)
+        .json(findUserDto);
     } catch (error) {
       nex(error);
     }

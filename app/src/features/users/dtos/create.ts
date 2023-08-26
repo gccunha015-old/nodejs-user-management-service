@@ -1,9 +1,13 @@
 import { z } from "zod";
+import { hashString } from "../../../utils";
 import { UserSchema } from "../model";
 
-export const CreateUserDTOSchema = UserSchema.pick({
+export const CreateUserDtoSchema = UserSchema.pick({
   email: true,
   password: true,
-}).strict();
+}).transform(async ({ password, ...rest }) => ({
+  password: await hashString(password),
+  ...rest,
+}));
 
-export type CreateUserDTO = z.infer<typeof CreateUserDTOSchema>;
+export type CreateUserDto = z.infer<typeof CreateUserDtoSchema>;

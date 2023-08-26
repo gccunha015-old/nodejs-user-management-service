@@ -2,18 +2,20 @@ import { User } from "./model";
 import { IUsersRepository } from "./interfaces";
 
 export class UsersInMemoryRepository implements IUsersRepository {
-  private readonly _users: User[] = [];
+  private readonly _users: User[];
+
+  constructor(users: User[] = []) {
+    this._users = users;
+  }
 
   async findById(id: string): Promise<User> {
-    const user = await Promise.resolve(
-      this._users.find((u) => u.externalId === id)
-    );
+    const user = this._users.find((u) => u.externalId === id);
     if (!user) throw new Error(`User with id ${id} doesn't exist`);
     return user;
   }
 
   async findAll(): Promise<User[]> {
-    return await Promise.resolve(this._users);
+    return this._users;
   }
 
   async create(newUser: User): Promise<User> {

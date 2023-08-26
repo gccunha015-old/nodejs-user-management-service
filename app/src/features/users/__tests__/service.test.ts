@@ -1,35 +1,35 @@
+import { randomUUID } from "node:crypto";
 import { UsersService } from "../service";
-import {
-  CreateUserDTO,
-  CreateUserDTOSchema,
-  FindUserDTO,
-  FindUserDTOSchema,
-} from "../dtos";
-import { User, UserSchema } from "../model";
-
 import { UsersInMemoryRepository } from "../repository";
-jest.mock("../repository");
+
+jest.deepUnmock("../service");
 
 describe("UsersService", () => {
   const mockedUsersRepository = jest.mocked(new UsersInMemoryRepository());
-  const input: CreateUserDTO = CreateUserDTOSchema.parse({
-    email: "test@test.com",
-    password: "pass",
-  });
-  const user: User = UserSchema.parse(input);
-  const output: FindUserDTO = FindUserDTOSchema.parse(user);
+  const service = new UsersService(mockedUsersRepository);
 
   describe("create", () => {
-    const service = new UsersService(mockedUsersRepository);
+    it("should create a user", async () => {
+      mockedUsersRepository.create.mockResolvedValue({
+        externalId: randomUUID(),
+        email: "test@test.com",
+        password: "password",
+        createdAt: new Date(),
+      });
 
-    beforeEach(() => {
-      mockedUsersRepository.create.mockClear();
+      const created = await service.create({
+        email: "test@test.com",
+        password: "password",
+      });
+      expect(created).toHaveProperty("email", "test@test.com");
+      expect(created).toHaveProperty("password", "password");
+      expect(created).toHaveProperty("externalId");
+      expect(created).toHaveProperty("createdAt");
+      expect(mockedUsersRepository.create).toHaveBeenCalledTimes(1);
     });
 
-    it("should create a user", async () => {
-      mockedUsersRepository.create.mockResolvedValue(user);
-      const created = await service.create(input);
-      expect(created).toStrictEqual(output);
+    afterEach(() => {
+      mockedUsersRepository.create.mockClear();
     });
   });
 
