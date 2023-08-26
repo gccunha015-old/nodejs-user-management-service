@@ -10,12 +10,12 @@ export class UsersService implements IUsersService {
     this._repository = repository;
   }
 
-  async findAll(): Promise<User[]> {
-    return await this._repository.findAll();
-  }
-
   async findById(id: string): Promise<User> {
     return await this._repository.findById(id);
+  }
+
+  async findAll(): Promise<User[]> {
+    return await this._repository.findAll();
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
