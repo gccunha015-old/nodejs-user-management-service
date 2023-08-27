@@ -2,7 +2,7 @@ import { z } from "zod";
 import { UserSchema } from "../model";
 
 export const FindUserDtoSchema = UserSchema.transform(
-  ({ externalId, ...rest }) => ({ id: externalId, ...rest })
+  ({ externalId: id, ...rest }) => ({ ...rest, id })
 );
 
 export type FindUserDto = z.infer<typeof FindUserDtoSchema>;

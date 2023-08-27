@@ -3,8 +3,9 @@ import { BASE_URL, UuidSchema } from "../../utils";
 import { IUsersController, IUsersService } from "./interfaces";
 import { CreateUserDtoSchema, FindUserDtoSchema } from "./dtos";
 import { usersService } from "./service";
+import { StatusCodes } from "http-status-codes";
 
-export class UserController implements IUsersController {
+export class UsersController implements IUsersController {
   private readonly _baseUrl = `${BASE_URL}/users`;
   private readonly _service: IUsersService;
 
@@ -12,46 +13,54 @@ export class UserController implements IUsersController {
     this._service = service;
   }
 
-  async findAll(req: Request, res: Response, nex: NextFunction): Promise<void> {
+  async findById(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const id = await UuidSchema.parseAsync(request.params.id);
+      const user = await this._service.findById(id);
+      const findUserDto = await FindUserDtoSchema.parseAsync(user);
+      response.status(StatusCodes.OK).json(findUserDto);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async findAll(
+    _request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const users = await this._service.findAll();
       const findUserDtos = await Promise.all(
         users.map((user) => FindUserDtoSchema.parseAsync(user))
       );
-      res.status(200).send(findUserDtos);
+      response.status(StatusCodes.OK).json(findUserDtos);
     } catch (error) {
-      nex(error);
+      next(error);
     }
   }
 
-  async findById(
-    req: Request,
-    res: Response,
-    nex: NextFunction
+  async create(
+    request: Request,
+    response: Response,
+    next: NextFunction
   ): Promise<void> {
     try {
-      const id = await UuidSchema.parseAsync(req.params.id);
-      const user = await this._service.findById(id);
-      const findUserDto = await FindUserDtoSchema.parseAsync(user);
-      res.status(200).send(findUserDto);
-    } catch (error) {
-      nex(error);
-    }
-  }
-
-  async create(req: Request, res: Response, nex: NextFunction): Promise<void> {
-    try {
-      const createUserDto = await CreateUserDtoSchema.parseAsync(req.body);
+      const createUserDto = await CreateUserDtoSchema.parseAsync(request.body);
       const user = await this._service.create(createUserDto);
       const findUserDto = await FindUserDtoSchema.parseAsync(user);
-      res
-        .status(201)
+      response
+        .status(StatusCodes.CREATED)
         .location(`${this._baseUrl}/${findUserDto.id}`)
         .json(findUserDto);
     } catch (error) {
-      nex(error);
+      next(error);
     }
   }
 }
 
-export const usersController = new UserController();
+export const usersController = new UsersController();

@@ -1,17 +1,17 @@
-import { randomUUID } from "node:crypto";
 import { UsersService } from "../service";
 import { UsersInMemoryRepository } from "../repository";
 import { UserSchema, User } from "../model";
 import { CreateUserDto } from "../dtos";
 
-jest.unmock("../service");
 jest.unmock("zod");
 
+jest.unmock("../service");
 describe("UsersService", () => {
-  const UsersRepositoryMock = jest.mocked(new UsersInMemoryRepository());
-  const service = new UsersService(UsersRepositoryMock);
+  const usersRepositoryMock = jest.mocked(new UsersInMemoryRepository());
+  const service = new UsersService(usersRepositoryMock);
+  const idStub1 = "1";
   const userStub1: User = {
-    externalId: randomUUID(),
+    externalId: idStub1,
     email: "test@test.com",
     password: "password",
     createdAt: new Date(),
@@ -19,24 +19,20 @@ describe("UsersService", () => {
 
   describe("findById", () => {
     it("should return user with valid id", async () => {
-      UsersRepositoryMock.findById.mockResolvedValueOnce(userStub1);
+      usersRepositoryMock.findById.mockResolvedValueOnce(userStub1);
 
-      const found = await service.findById("1");
+      const found = await service.findById(idStub1);
       expect(found).toStrictEqual(userStub1);
 
-      expect(UsersRepositoryMock.findById).toHaveBeenCalledWith("1");
+      expect(usersRepositoryMock.findById).toHaveBeenCalledWith(idStub1);
     });
 
     it("should throw error for invalid id", async () => {
-      UsersRepositoryMock.findById.mockRejectedValueOnce(new Error());
+      usersRepositoryMock.findById.mockRejectedValueOnce(new Error());
 
-      await expect(service.findById("1")).rejects.toThrowError();
+      await expect(service.findById(idStub1)).rejects.toThrowError();
 
-      expect(UsersRepositoryMock.findById).toHaveBeenCalledWith("1");
-    });
-
-    afterEach(() => {
-      UsersRepositoryMock.findById.mockClear();
+      expect(usersRepositoryMock.findById).toHaveBeenCalledWith(idStub1);
     });
   });
 
@@ -48,25 +44,21 @@ describe("UsersService", () => {
     const usersStubs = [userStub1, userStub2];
 
     it("should return all users", async () => {
-      UsersRepositoryMock.findAll.mockResolvedValueOnce(usersStubs);
+      usersRepositoryMock.findAll.mockResolvedValueOnce(usersStubs);
 
       const found = await service.findAll();
       expect(found).toHaveLength(2);
 
-      expect(UsersRepositoryMock.findAll).toHaveBeenCalled();
+      expect(usersRepositoryMock.findAll).toHaveBeenCalled();
     });
 
     it("should return empty array", async () => {
-      UsersRepositoryMock.findAll.mockResolvedValueOnce([]);
+      usersRepositoryMock.findAll.mockResolvedValueOnce([]);
 
       const found = await service.findAll();
       expect(found).toHaveLength(0);
 
-      expect(UsersRepositoryMock.findAll).toHaveBeenCalled();
-    });
-
-    afterEach(() => {
-      UsersRepositoryMock.findAll.mockClear();
+      expect(usersRepositoryMock.findAll).toHaveBeenCalled();
     });
   });
 
@@ -79,18 +71,48 @@ describe("UsersService", () => {
 
     it("should create a user", async () => {
       UserSchemaMock.parseAsync.mockResolvedValueOnce(userStub1);
-      UsersRepositoryMock.create.mockResolvedValueOnce(userStub1);
+      usersRepositoryMock.create.mockResolvedValueOnce(userStub1);
 
       const created = await service.create(createUserDtoStub);
       expect(created).toStrictEqual(userStub1);
 
       expect(UserSchemaMock.parseAsync).toHaveBeenCalledWith(createUserDtoStub);
-      expect(UsersRepositoryMock.create).toHaveBeenCalledWith(userStub1);
+      expect(usersRepositoryMock.create).toHaveBeenCalledWith(userStub1);
+      usersRepositoryMock.create.mockClear();
     });
 
-    afterEach(() => {
-      UsersRepositoryMock.create.mockClear();
-      UserSchemaMock.parseAsync.mockClear();
+    it("should throw error for invalid email", async () => {
+      const createUserDtoWithInvalidEmailStub = {
+        ...createUserDtoStub,
+        email: "test",
+      };
+      UserSchemaMock.parseAsync.mockRejectedValueOnce(new Error());
+
+      await expect(
+        service.create(createUserDtoWithInvalidEmailStub)
+      ).rejects.toThrowError();
+
+      expect(UserSchemaMock.parseAsync).toHaveBeenCalledWith(
+        createUserDtoWithInvalidEmailStub
+      );
+      expect(usersRepositoryMock.create).not.toHaveBeenCalled();
+    });
+
+    it("should throw error for invalid password", async () => {
+      const createUserDtoWithInvalidPasswordStub = {
+        ...createUserDtoStub,
+        password: "pass",
+      };
+      UserSchemaMock.parseAsync.mockRejectedValueOnce(new Error());
+
+      await expect(
+        service.create(createUserDtoWithInvalidPasswordStub)
+      ).rejects.toThrowError();
+
+      expect(UserSchemaMock.parseAsync).toHaveBeenCalledWith(
+        createUserDtoWithInvalidPasswordStub
+      );
+      expect(usersRepositoryMock.create).not.toHaveBeenCalled();
     });
   });
 });

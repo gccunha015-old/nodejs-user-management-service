@@ -2,7 +2,6 @@ import { UsersInMemoryRepository } from "../repository";
 import { User } from "../model";
 
 jest.unmock("../repository");
-
 describe("UsersInMemoryRepository", () => {
   const users: User[] = [];
   const usersPushSpy = jest.spyOn(users, "push");
@@ -13,6 +12,10 @@ describe("UsersInMemoryRepository", () => {
     password: "pass",
     createdAt: new Date(),
   };
+
+  beforeEach(() => {
+    users.splice(0, users.length);
+  });
 
   describe("findById", () => {
     const usersFindSpy = jest.spyOn(users, "find");
@@ -31,10 +34,6 @@ describe("UsersInMemoryRepository", () => {
 
       expect(usersFindSpy).toHaveBeenCalled();
       expect(usersFindSpy).toReturnWith(undefined);
-    });
-
-    afterEach(() => {
-      usersFindSpy.mockClear();
     });
   });
 
@@ -69,14 +68,5 @@ describe("UsersInMemoryRepository", () => {
       expect(usersPushSpy).toHaveBeenCalledWith(userStub1);
       expect(repositoryFindByIdSpy).toHaveBeenCalledWith(userStub1.externalId);
     });
-
-    afterEach(() => {
-      repositoryFindByIdSpy.mockClear();
-    });
-  });
-
-  afterEach(() => {
-    users.splice(0, users.length);
-    usersPushSpy.mockClear();
   });
 });

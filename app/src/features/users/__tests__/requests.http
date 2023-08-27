@@ -1,0 +1,18 @@
+@baseUrl = http://localhost:3000
+
+###
+@users = {{baseUrl}}/users
+GET {{users}}
+
+###
+@userId = 654d6a18-3ab5-4e4a-af6e-95ce1dfb7ba2
+GET {{users}}/{{userId}}
+
+###
+POST {{users}}
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "password"
+}

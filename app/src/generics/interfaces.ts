@@ -20,7 +20,19 @@ export interface IService<ID, ENTITY, CREATE_DTO>
   extends IReadWrite<ID, ENTITY, CREATE_DTO> {}
 
 export interface IController {
-  findAll(req: Request, res: Response, nex?: NextFunction): Promise<void>;
-  findById(req: Request, res: Response, nex?: NextFunction): Promise<void>;
-  create(req: Request, res: Response, nex?: NextFunction): Promise<void>;
+  findAll(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void>;
+  findById(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void>;
+  create(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void>;
 }
