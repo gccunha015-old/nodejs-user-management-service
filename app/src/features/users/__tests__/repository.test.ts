@@ -20,20 +20,44 @@ describe("UsersInMemoryRepository", () => {
   describe("findById", () => {
     const usersFindSpy = jest.spyOn(users, "find");
 
+    beforeEach(() => {
+      usersFindSpy.mockClear();
+    });
+
     it("should return user with valid id", async () => {
-      users.push(userStub1);
+      async function arrange() {
+        users.push(userStub1);
+      }
+      async function act() {
+        try {
+          return await repository.findById("1");
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toStrictEqual(userStub1);
+        expect(usersFindSpy).toHaveBeenCalledTimes(1);
+      }
 
-      const found = await repository.findById("1");
-      expect(found).toStrictEqual(userStub1);
-
-      expect(usersFindSpy).toHaveBeenCalled();
+      await arrange().then(act).then(assert);
     });
 
     it("should throw error for invalid id", async () => {
-      await expect(repository.findById("1")).rejects.toThrowError();
+      async function act() {
+        try {
+          return await repository.findById("1");
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toBeInstanceOf(Error);
+        expect(usersFindSpy).toHaveBeenCalledTimes(1);
+        expect(usersFindSpy).toReturnWith(undefined);
+      }
 
-      expect(usersFindSpy).toHaveBeenCalled();
-      expect(usersFindSpy).toReturnWith(undefined);
+      await act().then(assert);
     });
   });
 
@@ -45,28 +69,64 @@ describe("UsersInMemoryRepository", () => {
     const usersStubs = [userStub1, userStub2];
 
     it("should return all users", async () => {
-      users.push(...usersStubs);
+      async function arrange() {
+        users.push(...usersStubs);
+      }
+      async function act() {
+        try {
+          return await repository.findAll();
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toHaveLength(2);
+      }
 
-      const found = await repository.findAll();
-      expect(found).toHaveLength(2);
+      await arrange().then(act).then(assert);
     });
 
     it("should return empty array", async () => {
-      const found = await repository.findAll();
-      expect(found).toHaveLength(0);
+      async function act() {
+        try {
+          return await repository.findAll();
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toHaveLength(0);
+      }
+
+      await act().then(assert);
     });
   });
 
   describe("create", () => {
     const repositoryFindByIdSpy = jest.spyOn(repository, "findById");
 
-    it("should create a user", async () => {
-      const created = await repository.create(userStub1);
-      expect(created).toStrictEqual(userStub1);
+    beforeEach(() => {
+      repositoryFindByIdSpy.mockClear();
+    });
 
-      expect(users).toHaveLength(1);
-      expect(usersPushSpy).toHaveBeenCalledWith(userStub1);
-      expect(repositoryFindByIdSpy).toHaveBeenCalledWith(userStub1.externalId);
+    it("should create a user", async () => {
+      async function act() {
+        try {
+          return await repository.create(userStub1);
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toStrictEqual(userStub1);
+        expect(users).toHaveLength(1);
+        expect(usersPushSpy).toHaveBeenCalledWith(userStub1);
+        expect(repositoryFindByIdSpy).toHaveBeenCalledWith(
+          userStub1.externalId
+        );
+      }
+
+      await act().then(assert);
     });
   });
 });

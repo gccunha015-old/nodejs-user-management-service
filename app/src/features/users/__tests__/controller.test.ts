@@ -39,14 +39,16 @@ describe("UsersController", () => {
 
   describe("findById", () => {
     beforeEach(() => {
+      UuidSchemaMock.parseAsync.mockClear();
       usersServiceMock.findById.mockClear();
     });
 
     it("should return user with valid id", async () => {
-      const requestStub: Request = {
-        params: { id: idStub1 },
-      } as Partial<Request> as Request;
+      let requestStub: Request;
       async function arrange() {
+        requestStub = {
+          params: { id: idStub1 },
+        } as Partial<Request> as Request;
         UuidSchemaMock.parseAsync.mockResolvedValueOnce(idStub1);
         usersServiceMock.findById.mockResolvedValueOnce(userStub1);
         FindUserDtoSchemaMock.parseAsync.mockResolvedValueOnce(
@@ -54,9 +56,18 @@ describe("UsersController", () => {
         );
       }
       async function act() {
-        await controller.findById(requestStub, responseMock, nextFunctionMock);
+        try {
+          return await controller.findById(
+            requestStub,
+            responseMock,
+            nextFunctionMock
+          );
+        } catch (error) {
+          return error;
+        }
       }
-      function assert() {
+      function assert(actResult: unknown) {
+        expect(actResult).not.toBeDefined();
         expect(responseMock.status).toHaveBeenCalledWith(StatusCodes.OK);
         expect(responseMock.json).toHaveBeenCalledWith(findUserDtoStub1);
         expect(UuidSchemaMock.parseAsync).toHaveBeenCalledWith(idStub1);
@@ -64,24 +75,35 @@ describe("UsersController", () => {
         expect(FindUserDtoSchemaMock.parseAsync).toHaveBeenCalledWith(
           userStub1
         );
+        expect(nextFunctionMock).not.toHaveBeenCalled();
       }
 
       await arrange().then(act).then(assert);
     });
 
     it("should throw error for invalid id", async () => {
-      const idStub2 = "2";
-      const requestStub: Request = {
-        params: { id: idStub2 },
-      } as Partial<Request> as Request;
-      const errorStub = new Error();
+      let idStub2: string, requestStub: Request, errorStub: Error;
       async function arrange() {
+        idStub2 = "2";
+        requestStub = {
+          params: { id: idStub2 },
+        } as Partial<Request> as Request;
+        errorStub = new Error();
         UuidSchemaMock.parseAsync.mockRejectedValueOnce(errorStub);
       }
       async function act() {
-        await controller.findById(requestStub, responseMock, nextFunctionMock);
+        try {
+          return await controller.findById(
+            requestStub,
+            responseMock,
+            nextFunctionMock
+          );
+        } catch (error) {
+          return error;
+        }
       }
-      function assert() {
+      function assert(actResult: unknown) {
+        expect(actResult).not.toBeDefined();
         expect(nextFunctionMock).toHaveBeenCalledWith(errorStub);
         expect(UuidSchemaMock.parseAsync).toHaveBeenCalledWith(idStub2);
         expect(usersServiceMock.findById).not.toHaveBeenCalled();
