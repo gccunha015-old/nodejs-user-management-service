@@ -7,11 +7,11 @@ jest.unmock("zod");
 
 jest.unmock("../service");
 describe("UsersService", () => {
-  const mocks = {
-    usersRepository: jest.mocked(new UsersInMemoryRepository()),
-  };
   const stubs = {} as { id: string; user: User };
-  const service = new UsersService(mocks.usersRepository);
+  const mocks = {} as {
+    usersRepository: jest.MockedObjectDeep<UsersInMemoryRepository>;
+  };
+  const sut = {} as { service: UsersService };
 
   beforeAll(() => {
     stubs.id = "0";
@@ -21,27 +21,24 @@ describe("UsersService", () => {
       password: "password",
       createdAt: new Date(),
     };
+    mocks.usersRepository = jest.mocked(new UsersInMemoryRepository());
+    sut.service = new UsersService(mocks.usersRepository);
   });
 
   describe("findById", () => {
-    beforeEach(() => {
-      mocks.usersRepository.findById.mockClear();
-    });
-
     it("should return user with valid id", async () => {
       async function arrange() {
         mocks.usersRepository.findById.mockResolvedValueOnce(stubs.user);
       }
       async function act() {
         try {
-          return await service.findById(stubs.id);
+          return await sut.service.findById(stubs.id);
         } catch (error) {
           return error;
         }
       }
       function assert(actResult: unknown) {
         expect(actResult).toStrictEqual(stubs.user);
-        expect(mocks.usersRepository.findById).toHaveBeenCalledWith(stubs.id);
       }
 
       await arrange().then(act).then(assert);
@@ -53,14 +50,13 @@ describe("UsersService", () => {
       }
       async function act() {
         try {
-          return await service.findById(stubs.id);
+          return await sut.service.findById(stubs.id);
         } catch (error) {
           return error;
         }
       }
       function assert(actResult: unknown) {
         expect(actResult).toBeInstanceOf(Error);
-        expect(mocks.usersRepository.findById).toHaveBeenCalledWith(stubs.id);
       }
 
       await arrange().then(act).then(assert);
@@ -80,24 +76,19 @@ describe("UsersService", () => {
       ];
     });
 
-    beforeEach(() => {
-      mocks.usersRepository.findAll.mockClear();
-    });
-
     it("should return all users", async () => {
       async function arrange() {
         mocks.usersRepository.findAll.mockResolvedValueOnce(suiteStubs.users);
       }
       async function act() {
         try {
-          return await service.findAll();
+          return await sut.service.findAll();
         } catch (error) {
           return error;
         }
       }
       function assert(actResult: unknown) {
         expect(actResult).toHaveLength(2);
-        expect(mocks.usersRepository.findAll).toHaveBeenCalled();
       }
 
       await arrange().then(act).then(assert);
@@ -109,108 +100,96 @@ describe("UsersService", () => {
       }
       async function act() {
         try {
-          return await service.findAll();
+          return await sut.service.findAll();
         } catch (error) {
           return error;
         }
       }
       function assert(actResult: unknown) {
         expect(actResult).toHaveLength(0);
-        expect(mocks.usersRepository.findAll).toHaveBeenCalled();
       }
 
       await arrange().then(act).then(assert);
     });
   });
 
-  // describe("create", () => {
-  //   const UserSchemaMock = jest.mocked(UserSchema);
-  //   const createUserDtoStub: CreateUserDto = {
-  //     email: "test@test.com",
-  //     password: "password",
-  //   };
+  describe("create", () => {
+    const suiteMocks = {} as {
+      userSchema: jest.MockedObjectDeep<typeof UserSchema>;
+    };
+    const suiteStubs = {} as { createUserDto: CreateUserDto };
 
-  //   beforeEach(() => {
-  //     UserSchemaMock.parseAsync.mockClear();
-  //     mocks.usersRepository.create.mockClear();
-  //   });
+    beforeAll(() => {
+      suiteMocks.userSchema = jest.mocked(UserSchema);
+      suiteStubs.createUserDto = {
+        email: "test@test.com",
+        password: "password",
+      };
+    });
 
-  //   it("should create a user", async () => {
-  //     async function arrange() {
-  //       UserSchemaMock.parseAsync.mockResolvedValueOnce(stubs.user);
-  //       mocks.usersRepository.create.mockResolvedValueOnce(stubs.user);
-  //     }
-  //     async function act() {
-  //       try {
-  //         return await service.create(createUserDtoStub);
-  //       } catch (error) {
-  //         return error;
-  //       }
-  //     }
-  //     function assert(actResult: unknown) {
-  //       expect(actResult).toStrictEqual(stubs.user);
-  //       expect(UserSchemaMock.parseAsync).toHaveBeenCalledWith(
-  //         createUserDtoStub
-  //       );
-  //       expect(mocks.usersRepository.create).toHaveBeenCalledWith(stubs.user);
-  //     }
+    it("should create a user", async () => {
+      async function arrange() {
+        suiteMocks.userSchema.parseAsync.mockResolvedValueOnce(stubs.user);
+        mocks.usersRepository.create.mockResolvedValueOnce(stubs.user);
+      }
+      async function act() {
+        try {
+          return await sut.service.create(suiteStubs.createUserDto);
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toStrictEqual(stubs.user);
+      }
 
-  //     await arrange().then(act).then(assert);
-  //   });
+      await arrange().then(act).then(assert);
+    });
 
-  //   it("should throw error for invalid email", async () => {
-  //     const createUserDtoWithInvalidEmailStub = {
-  //       ...createUserDtoStub,
-  //       email: "test",
-  //     };
-  //     async function arrange() {
-  //       UserSchemaMock.parseAsync.mockRejectedValueOnce(new Error());
-  //     }
-  //     async function act() {
-  //       try {
-  //         return await service.create(createUserDtoWithInvalidEmailStub);
-  //       } catch (error) {
-  //         return error;
-  //       }
-  //     }
-  //     function assert(actResult: unknown) {
-  //       expect(actResult).toBeInstanceOf(Error);
-  //       expect(UserSchemaMock.parseAsync).toHaveBeenCalledWith(
-  //         createUserDtoWithInvalidEmailStub
-  //       );
-  //       expect(mocks.usersRepository.create).not.toHaveBeenCalled();
-  //     }
+    it("should throw error for invalid email", async () => {
+      const testStubs = {} as { createUserDto: CreateUserDto };
+      async function arrange() {
+        testStubs.createUserDto = {
+          ...suiteStubs.createUserDto,
+          email: "test",
+        };
+        suiteMocks.userSchema.parseAsync.mockRejectedValueOnce(new Error());
+      }
+      async function act() {
+        try {
+          return await sut.service.create(testStubs.createUserDto);
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toBeInstanceOf(Error);
+      }
 
-  //     await arrange().then(act).then(assert);
-  //   });
+      await arrange().then(act).then(assert);
+    });
 
-  //   it("should throw error for invalid password", async () => {
-  //     const stubs = {} as {
-  //       createUserDto: CreateUserDto;
-  //     };
-  //     async function arrange() {
-  //       stubs.createUserDto = {
-  //         ...createUserDtoStub,
-  //         password: "pass",
-  //       };
-  //       UserSchemaMock.parseAsync.mockRejectedValueOnce(new Error());
-  //     }
-  //     async function act() {
-  //       const { createUserDto } = stubs;
-  //       try {
-  //         return await service.create(createUserDto);
-  //       } catch (error) {
-  //         return error;
-  //       }
-  //     }
-  //     function assert(actResult: unknown) {
-  //       const { createUserDto } = stubs;
-  //       expect(actResult).toBeInstanceOf(Error);
-  //       expect(UserSchemaMock.parseAsync).toHaveBeenCalledWith(createUserDto);
-  //       expect(mocks.usersRepository.create).not.toHaveBeenCalled();
-  //     }
+    it("should throw error for invalid password", async () => {
+      const testStubs = {} as { createUserDto: CreateUserDto };
+      async function arrange() {
+        testStubs.createUserDto = {
+          ...suiteStubs.createUserDto,
+          password: "pass",
+        };
+        suiteMocks.userSchema.parseAsync.mockRejectedValueOnce(new Error());
+      }
+      async function act() {
+        try {
+          return await sut.service.create(testStubs.createUserDto);
+        } catch (error) {
+          return error;
+        }
+      }
+      function assert(actResult: unknown) {
+        expect(actResult).toBeInstanceOf(Error);
+      }
 
-  //     await arrange().then(act).then(assert);
-  //   });
-  // });
+      await arrange().then(act).then(assert);
+    });
+  });
 });

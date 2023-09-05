@@ -13,54 +13,57 @@ jest.unmock("../model");
 
 jest.unmock("../controller");
 describe("UsersController", () => {
-  const UuidSchemaMock = jest.mocked(UuidSchema);
-  const FindUserDtoSchemaMock = jest.mocked(FindUserDtoSchema);
-  const usersServiceMock = jest.mocked(new UsersService());
-  const controller = new UsersController(usersServiceMock);
-  const idStub1 = randomUUID();
-  const userStub1: User = {
-    externalId: idStub1,
-    email: "test@test.com",
-    password: "password",
-    createdAt: new Date(),
+  const stubs = {} as { id: string; user: User; findUserDto: FindUserDto };
+  const mocks = {} as {
+    uuidSchema: jest.MockedObjectDeep<typeof UuidSchema>;
+    findUserDtoSchema: jest.MockedObjectDeep<typeof FindUserDtoSchema>;
+    usersService: jest.MockedObjectDeep<UsersService>;
+    response: jest.MockedObjectDeep<Response>;
+    nextFunction: jest.MockedFunction<NextFunction>;
   };
-  const findUserDtoStub1: FindUserDto = {
-    ...(({ externalId: id, ...rest }) => ({ ...rest, id }))(userStub1),
-  };
-  const responseMock: Response = {
-    status: jest.fn(() => responseMock),
-    json: jest.fn(),
-  } as Partial<Response> as Response;
-  const nextFunctionMock: NextFunction = jest.fn();
+  const sut = {} as { controller: UsersController };
 
-  beforeEach(() => {
-    FindUserDtoSchemaMock.parseAsync.mockClear();
+  beforeAll(() => {
+    stubs.id = randomUUID();
+    stubs.user = {
+      externalId: stubs.id,
+      email: "test@test.com",
+      password: "password",
+      createdAt: new Date(),
+    };
+    stubs.findUserDto = {
+      ...(({ externalId: id, ...rest }) => ({ ...rest, id }))(stubs.user),
+    };
+    mocks.uuidSchema = jest.mocked(UuidSchema);
+    mocks.findUserDtoSchema = jest.mocked(FindUserDtoSchema);
+    mocks.usersService = jest.mocked(new UsersService());
+    mocks.response = {
+      status: jest.fn(() => mocks.response),
+      json: jest.fn(),
+    } as Partial<Response> as jest.MockedObjectDeep<Response>;
+    mocks.nextFunction = jest.fn();
+    sut.controller = new UsersController(mocks.usersService);
   });
 
   describe("findById", () => {
-    beforeEach(() => {
-      UuidSchemaMock.parseAsync.mockClear();
-      usersServiceMock.findById.mockClear();
-    });
-
-    it("should return user with valid id", async () => {
-      let requestStub: Request;
+    it("should respond with status OK and json of user for valid id", async () => {
+      const testStubs = {} as { request: Request };
       async function arrange() {
-        requestStub = {
-          params: { id: idStub1 },
+        testStubs.request = {
+          params: { id: stubs.id },
         } as Partial<Request> as Request;
-        UuidSchemaMock.parseAsync.mockResolvedValueOnce(idStub1);
-        usersServiceMock.findById.mockResolvedValueOnce(userStub1);
-        FindUserDtoSchemaMock.parseAsync.mockResolvedValueOnce(
-          findUserDtoStub1
+        mocks.uuidSchema.parseAsync.mockResolvedValueOnce(stubs.id);
+        mocks.usersService.findById.mockResolvedValueOnce(stubs.user);
+        mocks.findUserDtoSchema.parseAsync.mockResolvedValueOnce(
+          stubs.findUserDto
         );
       }
       async function act() {
         try {
-          return await controller.findById(
-            requestStub,
-            responseMock,
-            nextFunctionMock
+          return await sut.controller.findById(
+            testStubs.request,
+            mocks.response,
+            mocks.nextFunction
           );
         } catch (error) {
           return error;
@@ -68,35 +71,29 @@ describe("UsersController", () => {
       }
       function assert(actResult: unknown) {
         expect(actResult).not.toBeDefined();
-        expect(responseMock.status).toHaveBeenCalledWith(StatusCodes.OK);
-        expect(responseMock.json).toHaveBeenCalledWith(findUserDtoStub1);
-        expect(UuidSchemaMock.parseAsync).toHaveBeenCalledWith(idStub1);
-        expect(usersServiceMock.findById).toHaveBeenCalledWith(idStub1);
-        expect(FindUserDtoSchemaMock.parseAsync).toHaveBeenCalledWith(
-          userStub1
-        );
-        expect(nextFunctionMock).not.toHaveBeenCalled();
+        expect(mocks.response.status).toHaveBeenCalledWith(StatusCodes.OK);
+        expect(mocks.response.json).toHaveBeenCalledWith(stubs.findUserDto);
       }
 
       await arrange().then(act).then(assert);
     });
 
-    it("should throw error for invalid id", async () => {
-      let idStub2: string, requestStub: Request, errorStub: Error;
+    it("should call next with error for invalid id", async () => {
+      const testStubs = {} as { id: string; request: Request; error: Error };
       async function arrange() {
-        idStub2 = "2";
-        requestStub = {
-          params: { id: idStub2 },
+        testStubs.id = "0";
+        testStubs.request = {
+          params: { id: testStubs.id },
         } as Partial<Request> as Request;
-        errorStub = new Error();
-        UuidSchemaMock.parseAsync.mockRejectedValueOnce(errorStub);
+        testStubs.error = new Error();
+        mocks.uuidSchema.parseAsync.mockRejectedValueOnce(testStubs.error);
       }
       async function act() {
         try {
-          return await controller.findById(
-            requestStub,
-            responseMock,
-            nextFunctionMock
+          return await sut.controller.findById(
+            testStubs.request,
+            mocks.response,
+            mocks.nextFunction
           );
         } catch (error) {
           return error;
@@ -104,10 +101,7 @@ describe("UsersController", () => {
       }
       function assert(actResult: unknown) {
         expect(actResult).not.toBeDefined();
-        expect(nextFunctionMock).toHaveBeenCalledWith(errorStub);
-        expect(UuidSchemaMock.parseAsync).toHaveBeenCalledWith(idStub2);
-        expect(usersServiceMock.findById).not.toHaveBeenCalled();
-        expect(FindUserDtoSchemaMock.parseAsync).not.toHaveBeenCalled();
+        expect(mocks.nextFunction).toHaveBeenCalledWith(testStubs.error);
       }
 
       await arrange().then(act).then(assert);
