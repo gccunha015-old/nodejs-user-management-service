@@ -1,6 +1,6 @@
 import { CreateUserDto } from "./dtos";
 import { IUsersService, IUsersRepository } from "./interfaces";
-import { User, UserSchema } from "./model";
+import { User, userSchema } from "./model";
 import { usersRepository } from "./repository";
 
 export class UsersService implements IUsersService {
@@ -19,7 +19,7 @@ export class UsersService implements IUsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const newUser = await UserSchema.parseAsync(createUserDto);
+    const newUser = await userSchema.parseAsync(createUserDto);
     return await this._repository.create(newUser);
   }
 }

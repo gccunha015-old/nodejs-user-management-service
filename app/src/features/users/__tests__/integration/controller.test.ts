@@ -1,22 +1,26 @@
 import { randomUUID } from "node:crypto";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import { UuidSchema } from "../../../utils";
-import { UsersController } from "../controller";
-import { User } from "../model";
-import { UsersService } from "../service";
-import { CreateUserDto, CreateUserDtoSchema, FindUserDtoSchema } from "../dtos";
+import { uuidSchema } from "../../../../utils";
+import { UsersController } from "../../controller";
+import { User } from "../../model";
+import { UsersService } from "../../service";
+import {
+  CreateUserDto,
+  createUserDtoSchema,
+  findUserDtoSchema,
+} from "../../dtos";
 
 jest.unmock("bcrypt");
 jest.unmock("zod");
-jest.unmock("../model");
+jest.unmock("../../model");
 
-jest.unmock("../controller");
+jest.unmock("../../controller");
 describe("UsersController", () => {
   const stubs = {} as { id: string; user: User };
   const mocks = {} as {
-    uuidSchema: jest.MockedObjectDeep<typeof UuidSchema>;
-    findUserDtoSchema: jest.MockedObjectDeep<typeof FindUserDtoSchema>;
+    uuidSchema: jest.MockedObjectDeep<typeof uuidSchema>;
+    findUserDtoSchema: jest.MockedObjectDeep<typeof findUserDtoSchema>;
     usersService: jest.MockedObjectDeep<UsersService>;
     response: jest.MockedObjectDeep<Response>;
     nextFunction: jest.MockedFunction<NextFunction>;
@@ -31,8 +35,8 @@ describe("UsersController", () => {
       password: "password",
       createdAt: new Date(),
     };
-    mocks.uuidSchema = jest.mocked(UuidSchema);
-    mocks.findUserDtoSchema = jest.mocked(FindUserDtoSchema);
+    mocks.uuidSchema = jest.mocked(uuidSchema);
+    mocks.findUserDtoSchema = jest.mocked(findUserDtoSchema);
     mocks.findUserDtoSchema.parseAsync.mockImplementation(async (data) => {
       const { externalId: id, ...rest } = data as User;
       return { ...rest, id };
@@ -79,14 +83,13 @@ describe("UsersController", () => {
     });
 
     it("should call next with error for invalid id", async () => {
-      const testStubs = {} as { id: string; request: Request; error: Error };
+      const testStubs = {} as { id: string; request: Request };
       async function arrange() {
         testStubs.id = "0";
         testStubs.request = {
           params: { id: testStubs.id },
         } as Partial<Request> as Request;
-        testStubs.error = new Error();
-        mocks.uuidSchema.parseAsync.mockRejectedValueOnce(testStubs.error);
+        mocks.uuidSchema.parseAsync.mockRejectedValueOnce(new Error());
       }
       async function act() {
         await sut.controller.findById(
@@ -96,7 +99,7 @@ describe("UsersController", () => {
         );
       }
       function assert() {
-        expect(mocks.nextFunction).toHaveBeenLastCalledWith(testStubs.error);
+        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
       }
 
       await arrange().then(act).then(assert);
@@ -104,17 +107,7 @@ describe("UsersController", () => {
   });
 
   describe("findAll", () => {
-    const suitSpies = {} as { Promise: { all: jest.SpyInstance } };
-
-    beforeAll(() => {
-      suitSpies.Promise = { all: jest.spyOn(Promise, "all") };
-    });
-
-    beforeEach(() => {
-      suitSpies.Promise.all.mockClear();
-    });
-
-    it("should respond with status OK and json of users", async () => {
+    it("should respond with status OK and json of 2 users", async () => {
       const testStubs = {} as { request: Request; users: User[] };
       async function arrange() {
         testStubs.request = {} as Request;
@@ -133,9 +126,7 @@ describe("UsersController", () => {
       }
       async function assert() {
         expect(mocks.response.status).toHaveBeenLastCalledWith(StatusCodes.OK);
-        expect(mocks.response.json).toHaveBeenLastCalledWith(
-          await suitSpies.Promise.all.mock.results[0].value
-        );
+        expect(mocks.response.json.mock.lastCall?.[0]).toHaveLength(2);
       }
 
       await arrange().then(act).then(assert);
@@ -154,11 +145,29 @@ describe("UsersController", () => {
           mocks.nextFunction
         );
       }
-      async function assert() {
+      function assert() {
         expect(mocks.response.status).toHaveBeenLastCalledWith(StatusCodes.OK);
-        expect(mocks.response.json).toHaveBeenLastCalledWith(
-          await suitSpies.Promise.all.mock.results[0].value
+        expect(mocks.response.json).toHaveBeenLastCalledWith([]);
+      }
+
+      await arrange().then(act).then(assert);
+    });
+
+    it("should call next with error", async () => {
+      const testStubs = {} as { request: Request };
+      async function arrange() {
+        testStubs.request = {} as Request;
+        mocks.usersService.findAll.mockRejectedValueOnce(new Error());
+      }
+      async function act() {
+        await sut.controller.findAll(
+          testStubs.request,
+          mocks.response,
+          mocks.nextFunction
         );
+      }
+      function assert() {
+        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
       }
 
       await arrange().then(act).then(assert);
@@ -167,12 +176,12 @@ describe("UsersController", () => {
 
   describe("create", () => {
     const suiteMocks = {} as {
-      creatUserDtoSchema: jest.MockedObjectDeep<typeof CreateUserDtoSchema>;
+      creatUserDtoSchema: jest.MockedObjectDeep<typeof createUserDtoSchema>;
     };
     const suiteStubs = {} as { createUserDto: CreateUserDto };
 
     beforeAll(() => {
-      suiteMocks.creatUserDtoSchema = jest.mocked(CreateUserDtoSchema);
+      suiteMocks.creatUserDtoSchema = jest.mocked(createUserDtoSchema);
       suiteStubs.createUserDto = {
         email: stubs.user.email,
         password: stubs.user.password,
@@ -212,50 +221,66 @@ describe("UsersController", () => {
       await arrange().then(act).then(assert);
     });
 
-    // it("should throw error for invalid email", async () => {
-    //   const testStubs = {} as { createUserDto: CreateUserDto };
-    //   async function arrange() {
-    //     testStubs.createUserDto = {
-    //       ...suiteStubs.createUserDto,
-    //       email: "test",
-    //     };
-    //     suiteMocks.userSchema.parseAsync.mockRejectedValueOnce(new Error());
-    //   }
-    //   async function act() {
-    //     try {
-    //       return await sut.service.create(testStubs.createUserDto);
-    //     } catch (error) {
-    //       return error;
-    //     }
-    //   }
-    //   function assert(actResult: unknown) {
-    //     expect(actResult).toBeInstanceOf(Error);
-    //   }
+    it("should call next with error for invalid email", async () => {
+      const testStubs = {} as {
+        request: Request;
+        createUserDto: CreateUserDto;
+      };
+      async function arrange() {
+        testStubs.request = {
+          body: suiteStubs.createUserDto,
+        } as Partial<Request> as Request;
+        testStubs.createUserDto = {
+          ...suiteStubs.createUserDto,
+          email: "test",
+        };
+        suiteMocks.creatUserDtoSchema.parseAsync.mockRejectedValueOnce(
+          new Error()
+        );
+      }
+      async function act() {
+        return await sut.controller.create(
+          testStubs.request,
+          mocks.response,
+          mocks.nextFunction
+        );
+      }
+      function assert() {
+        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
+      }
 
-    //   await arrange().then(act).then(assert);
-    // });
+      await arrange().then(act).then(assert);
+    });
 
-    // it("should throw error for invalid password", async () => {
-    //   const testStubs = {} as { createUserDto: CreateUserDto };
-    //   async function arrange() {
-    //     testStubs.createUserDto = {
-    //       ...suiteStubs.createUserDto,
-    //       password: "pass",
-    //     };
-    //     suiteMocks.userSchema.parseAsync.mockRejectedValueOnce(new Error());
-    //   }
-    //   async function act() {
-    //     try {
-    //       return await sut.service.create(testStubs.createUserDto);
-    //     } catch (error) {
-    //       return error;
-    //     }
-    //   }
-    //   function assert(actResult: unknown) {
-    //     expect(actResult).toBeInstanceOf(Error);
-    //   }
+    it("should call next with error for invalid password", async () => {
+      const testStubs = {} as {
+        request: Request;
+        createUserDto: CreateUserDto;
+      };
+      async function arrange() {
+        testStubs.request = {
+          body: suiteStubs.createUserDto,
+        } as Partial<Request> as Request;
+        testStubs.createUserDto = {
+          ...suiteStubs.createUserDto,
+          password: "pass",
+        };
+        suiteMocks.creatUserDtoSchema.parseAsync.mockRejectedValueOnce(
+          new Error()
+        );
+      }
+      async function act() {
+        return await sut.controller.create(
+          testStubs.request,
+          mocks.response,
+          mocks.nextFunction
+        );
+      }
+      function assert() {
+        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
+      }
 
-    //   await arrange().then(act).then(assert);
-    // });
+      await arrange().then(act).then(assert);
+    });
   });
 });

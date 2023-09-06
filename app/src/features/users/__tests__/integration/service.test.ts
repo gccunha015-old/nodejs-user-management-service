@@ -1,11 +1,11 @@
-import { UsersService } from "../service";
-import { UsersInMemoryRepository } from "../repository";
-import { UserSchema, User } from "../model";
-import { CreateUserDto } from "../dtos";
+import { UsersService } from "../../service";
+import { UsersInMemoryRepository } from "../../repository";
+import { userSchema, User } from "../../model";
+import { CreateUserDto } from "../../dtos";
 
 jest.unmock("zod");
 
-jest.unmock("../service");
+jest.unmock("../../service");
 describe("UsersService", () => {
   const stubs = {} as { id: string; user: User };
   const mocks = {} as {
@@ -115,12 +115,12 @@ describe("UsersService", () => {
 
   describe("create", () => {
     const suiteMocks = {} as {
-      userSchema: jest.MockedObjectDeep<typeof UserSchema>;
+      userSchema: jest.MockedObjectDeep<typeof userSchema>;
     };
     const suiteStubs = {} as { createUserDto: CreateUserDto };
 
     beforeAll(() => {
-      suiteMocks.userSchema = jest.mocked(UserSchema);
+      suiteMocks.userSchema = jest.mocked(userSchema);
       suiteStubs.createUserDto = {
         email: "test@test.com",
         password: "password",

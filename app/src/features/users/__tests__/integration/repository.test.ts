@@ -1,7 +1,7 @@
-import { UsersInMemoryRepository } from "../repository";
-import { User } from "../model";
+import { UsersInMemoryRepository } from "../../repository";
+import { User } from "../../model";
 
-jest.unmock("../repository");
+jest.unmock("../../repository");
 describe("UsersInMemoryRepository", () => {
   const stubs = {} as { users: User[]; user: User };
   const sut = {} as { repository: UsersInMemoryRepository };
