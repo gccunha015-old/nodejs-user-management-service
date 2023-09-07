@@ -6,16 +6,14 @@ import { User, userSchema } from "../../model";
 jest.unmock("zod");
 jest.unmock("bcrypt");
 
-jest.unmock("../../model");
+jest.deepUnmock("../../model");
 describe("user model", () => {
   describe("userSchema", () => {
-    const mocks = {} as {
-      uuidSchema: jest.MockedObjectDeep<typeof uuidSchema>;
-    };
+    const spies = {} as { uuidSchema: { parseAsync: jest.SpyInstance } };
 
     beforeAll(() => {
-      mocks.uuidSchema = jest.mocked(uuidSchema);
-      mocks.uuidSchema.
+      // mocks.uuidSchema = jest.mocked(uuidSchema);
+      spies.uuidSchema = { parseAsync: jest.spyOn(uuidSchema, "parseAsync") };
     });
 
     describe("parseAsync", () => {
@@ -32,7 +30,10 @@ describe("user model", () => {
 
       it("should return valid user", async () => {
         async function arrange() {
-          mocks.uuidSchema.parseAsync.mockResolvedValueOnce(
+          // mocks.uuidSchema.parseAsync.mockResolvedValueOnce(
+          //   suiteStubs.data.externalId
+          // );
+          spies.uuidSchema.parseAsync.mockResolvedValueOnce(
             suiteStubs.data.externalId
           );
         }
@@ -44,6 +45,7 @@ describe("user model", () => {
           }
         }
         async function assert(actResult: unknown) {
+          console.log(actResult);
           expect(actResult).toStrictEqual(suiteStubs.data);
         }
 
