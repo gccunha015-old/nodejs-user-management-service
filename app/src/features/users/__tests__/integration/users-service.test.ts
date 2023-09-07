@@ -1,6 +1,6 @@
-import { UsersService } from "../../service";
-import { UsersInMemoryRepository } from "../../repository";
-import { userSchema, User } from "../../model";
+import { UsersService } from "../../users-service";
+import { UsersInMemoryRepository } from "../../users-repository";
+import { userSchema, User } from "../../users-model";
 import { CreateUserDto } from "../../dtos";
 
 jest.unmock("zod");

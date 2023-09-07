@@ -1,9 +1,9 @@
 import { compare } from "bcrypt";
-import { hashString } from "../bcrypt";
+import { hashString } from "../bcrypt-utils";
 
 jest.unmock("bcrypt");
 
-jest.unmock("../bcrypt");
+jest.unmock("../bcrypt-utils");
 describe("bcrypt utils", () => {
   describe("hashString", () => {
     it("should return hashed string", async () => {

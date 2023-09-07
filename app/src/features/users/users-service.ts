@@ -1,7 +1,7 @@
 import { CreateUserDto } from "./dtos";
 import { IUsersService, IUsersRepository } from "./interfaces";
-import { User, userSchema } from "./model";
-import { usersRepository } from "./repository";
+import { User, userSchema } from "./users-model";
+import { usersRepository } from "./users-repository";
 
 export class UsersService implements IUsersService {
   private readonly _repository: IUsersRepository;

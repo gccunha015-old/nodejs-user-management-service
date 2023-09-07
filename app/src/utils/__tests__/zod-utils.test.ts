@@ -1,14 +1,14 @@
 import { randomUUID } from "node:crypto";
 import { ZodError } from "zod";
-import { uuidSchema } from "../zod";
+import { uuidSchema } from "../zod-utils";
 
 jest.unmock("zod");
 
-jest.unmock("../zod");
+jest.unmock("../zod-utils");
 describe("zod utils", () => {
   describe("uuidSchema", () => {
     describe("parseAsync", () => {
-      it("should return valid uuid", async () => {
+      it("when input is an uuid, should return it", async () => {
         const testStubs = {} as { uuid: string };
         async function arrange() {
           testStubs.uuid = randomUUID();
@@ -27,7 +27,7 @@ describe("zod utils", () => {
         await arrange().then(act).then(assert);
       });
 
-      it("should throw ZodError for invalid uuid", async () => {
+      it("when input isn't an uuid, should throw ZodError", async () => {
         const testStubs = {} as { uuid: string };
         async function arrange() {
           testStubs.uuid = "not-an-uuid";

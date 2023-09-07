@@ -5,9 +5,9 @@ import {
 jest.deepUnmock("../../../__mocks__");
 
 export const usersService = {
-  findById: jest.fn().mockImplementation(receiveArgumentAndReturnItAsync),
-  findAll: jest.fn().mockImplementation(returnArrayAsync),
-  create: jest.fn().mockImplementation(receiveArgumentAndReturnItAsync),
+  findById: receiveArgumentAndReturnItAsync,
+  findAll: returnArrayAsync,
+  create: receiveArgumentAndReturnItAsync,
 };
 
 export const UsersService = jest.fn().mockReturnValue(usersService);

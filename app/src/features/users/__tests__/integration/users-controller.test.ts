@@ -2,9 +2,9 @@ import { randomUUID } from "node:crypto";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { uuidSchema } from "../../../../utils";
-import { UsersController } from "../../controller";
-import { User } from "../../model";
-import { UsersService } from "../../service";
+import { UsersController } from "../../users-controller";
+import { User } from "../../users-model";
+import { UsersService } from "../../users-service";
 import {
   CreateUserDto,
   createUserDtoSchema,

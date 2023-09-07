@@ -1,4 +1,4 @@
 import { IRepository } from "../../../generics";
-import { User } from "../model";
+import { User } from "../users-model";
 
 export interface IUsersRepository extends IRepository<string, User> {}

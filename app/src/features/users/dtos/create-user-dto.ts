@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { hashString } from "../../../utils";
-import { userSchema } from "../model";
+import { userSchema } from "../users-model";
 
 export const createUserDtoSchema = userSchema
   .pick({

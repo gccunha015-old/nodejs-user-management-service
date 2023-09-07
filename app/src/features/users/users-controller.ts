@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { BASE_URL, uuidSchema } from "../../utils";
 import { IUsersController, IUsersService } from "./interfaces";
 import { createUserDtoSchema, findUserDtoSchema } from "./dtos";
-import { usersService } from "./service";
+import { usersService } from "./users-service";
 import { StatusCodes } from "http-status-codes";
 
 export class UsersController implements IUsersController {

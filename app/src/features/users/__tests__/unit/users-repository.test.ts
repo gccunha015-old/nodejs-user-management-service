@@ -1,5 +1,5 @@
-import { UsersInMemoryRepository } from "../../repository";
-import { User } from "../../model";
+import { UsersInMemoryRepository } from "../../users-repository";
+import { User } from "../../users-model";
 
 jest.unmock("../../repository");
 describe("UsersInMemoryRepository", () => {

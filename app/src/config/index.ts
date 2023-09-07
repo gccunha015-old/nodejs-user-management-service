@@ -1,2 +1,2 @@
-export * from "./env";
-export * from "./processEventsHandling";
+export * from "./env-config";
+export * from "./process-events-handler";
