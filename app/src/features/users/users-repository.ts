@@ -1,5 +1,4 @@
-import { User } from "./users-model";
-import { IUsersRepository } from "./interfaces";
+import { IUsersRepository, User } from "./types";
 
 export class UsersInMemoryRepository implements IUsersRepository {
   private readonly _users: User[];

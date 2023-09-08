@@ -1,6 +1,5 @@
-import { z } from "zod";
 import { hashString } from "../../../utils";
-import { userSchema } from "../users-model";
+import { userSchema } from "./user-schema";
 
 export const createUserDtoSchema = userSchema
   .pick({
@@ -11,5 +10,3 @@ export const createUserDtoSchema = userSchema
     password: await hashString(password),
     ...rest,
   }));
-
-export type CreateUserDto = z.infer<typeof createUserDtoSchema>;

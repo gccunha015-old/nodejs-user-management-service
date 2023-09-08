@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { dateSchema, emailSchema, uuidSchema } from "../../utils";
+import { dateSchema, emailSchema, uuidSchema } from "../../../utils";
 
 export const userSchema = z
   .object({
@@ -10,5 +10,3 @@ export const userSchema = z
     createdAt: dateSchema.default(new Date()),
   })
   .strict();
-
-export type User = z.infer<typeof userSchema>;

@@ -1,6 +1,10 @@
-import { CreateUserDto } from "./dtos";
-import { IUsersService, IUsersRepository } from "./interfaces";
-import { User, userSchema } from "./users-model";
+import { userSchema, findUserDtoSchema } from "./zod-schemas";
+import {
+  IUsersService,
+  IUsersRepository,
+  CreateUserDto,
+  FindUserDto,
+} from "./types";
 import { usersRepository } from "./users-repository";
 
 export class UsersService implements IUsersService {
@@ -10,17 +14,22 @@ export class UsersService implements IUsersService {
     this._repository = repository;
   }
 
-  async findById(id: string): Promise<User> {
-    return await this._repository.findById(id);
+  async findById(id: string): Promise<FindUserDto> {
+    const user = await this._repository.findById(id);
+    return await findUserDtoSchema.parseAsync(user);
   }
 
-  async findAll(): Promise<User[]> {
-    return await this._repository.findAll();
+  async findAll(): Promise<FindUserDto[]> {
+    const users = await this._repository.findAll();
+    return await Promise.all(
+      users.map((user) => findUserDtoSchema.parseAsync(user))
+    );
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<FindUserDto> {
     const newUser = await userSchema.parseAsync(createUserDto);
-    return await this._repository.create(newUser);
+    const user = await this._repository.create(newUser);
+    return await findUserDtoSchema.parseAsync(user);
   }
 }
 

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { BASE_URL, uuidSchema } from "../../utils";
-import { IUsersController, IUsersService } from "./interfaces";
-import { createUserDtoSchema, findUserDtoSchema } from "./dtos";
-import { usersService } from "./users-service";
 import { StatusCodes } from "http-status-codes";
+import { BASE_URL, uuidSchema } from "../../utils";
+import { IUsersController, IUsersService } from "./types";
+import { createUserDtoSchema } from "./zod-schemas";
+import { usersService } from "./users-service";
 
 export class UsersController implements IUsersController {
   private readonly _baseUrl = `${BASE_URL}/users`;
@@ -20,8 +20,7 @@ export class UsersController implements IUsersController {
   ): Promise<void> {
     try {
       const id = await uuidSchema.parseAsync(request.params.id);
-      const user = await this._service.findById(id);
-      const findUserDto = await findUserDtoSchema.parseAsync(user);
+      const findUserDto = await this._service.findById(id);
       response.status(StatusCodes.OK).json(findUserDto);
     } catch (error) {
       next(error);
@@ -34,10 +33,7 @@ export class UsersController implements IUsersController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const users = await this._service.findAll();
-      const findUserDtos = await Promise.all(
-        users.map((user) => findUserDtoSchema.parseAsync(user))
-      );
+      const findUserDtos = await this._service.findAll();
       response.status(StatusCodes.OK).json(findUserDtos);
     } catch (error) {
       next(error);
@@ -51,8 +47,7 @@ export class UsersController implements IUsersController {
   ): Promise<void> {
     try {
       const createUserDto = await createUserDtoSchema.parseAsync(request.body);
-      const user = await this._service.create(createUserDto);
-      const findUserDto = await findUserDtoSchema.parseAsync(user);
+      const findUserDto = await this._service.create(createUserDto);
       response
         .status(StatusCodes.CREATED)
         .location(`${this._baseUrl}/${findUserDto.id}`)
