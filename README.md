@@ -79,6 +79,7 @@ REST API service to authenticate users.
 - [The secret to scale and update Node.js applications at any time of the day][erick-wendel-2]
 - [How to mock an imported Typescript class with Jest][abou-kone-1]
 - [How to mock (Express) Response in tests - Node.js - TypeScript][coding-like-david-1]
+- [Mocks Aren't Stubs][martin-fowler-1]
 
 <p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
 
@@ -109,3 +110,4 @@ REST API service to authenticate users.
 [goldbergyoni-1]: https://github.com/goldbergyoni/nodebestpractices
 [abou-kone-1]: https://dev.to/codedivoire/how-to-mock-an-imported-typescript-class-with-jest-2g7j
 [coding-like-david-1]: https://www.youtube.com/watch?v=hC1q576vRNA
+[martin-fowler-1]: https://martinfowler.com/articles/mocksArentStubs.html

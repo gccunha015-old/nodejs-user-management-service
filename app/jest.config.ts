@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
   verbose: false,
   automock: true,
   bail: 1,
+  setupFilesAfterEnv: ["./set-up-after-env.jest.ts"],
   // collectCoverage: true
 };
 

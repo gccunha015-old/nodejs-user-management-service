@@ -3,9 +3,7 @@ import { expressMocks } from "../../../../__mocks__";
 import { UsersController } from "../../users-controller";
 import { UsersService } from "../../users-service";
 
-jest.deepUnmock("../../../../__mocks__");
-
-jest.unmock("../../controller");
+jest.unmock("../../users-controller");
 describe("UsersController", () => {
   const mocks = {} as { usersService: jest.MockedObjectDeep<UsersService> };
   const sut = {} as { controller: UsersController };
@@ -105,7 +103,7 @@ describe("UsersController", () => {
   });
 
   describe("create", () => {
-    it("when request has body, should call response.status, rensponse.location and response.json", async () => {
+    it("when request has body, should call response.status, response.location and response.json", async () => {
       const testStubs = {} as { request: Request };
       async function arrange() {
         testStubs.request = { body: {} } as Request;

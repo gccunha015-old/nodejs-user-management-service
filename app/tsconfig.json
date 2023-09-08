@@ -13,5 +13,5 @@
     "types": ["node", "jest"]
   },
   "ts-node": { "transpileOnly": true },
-  "exclude": ["jest.config.ts"]
+  "exclude": ["*jest*ts"]
 }

@@ -1,31 +1,20 @@
 import { randomUUID } from "node:crypto";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import { uuidSchema } from "../../../../utils";
-import { UsersController } from "../../users-controller";
 import { User } from "../../users-model";
+import { FindUserDto, findUserDtoSchema } from "../../dtos";
+import { UsersInMemoryRepository } from "../../users-repository";
 import { UsersService } from "../../users-service";
-import {
-  CreateUserDto,
-  createUserDtoSchema,
-  findUserDtoSchema,
-} from "../../dtos";
+import { UsersController } from "../../users-controller";
+import { expressMocks } from "../../../../__mocks__";
 
-jest.unmock("bcrypt");
-jest.unmock("zod");
-jest.unmock("../../model");
-
-jest.unmock("../../controller");
-describe("UsersController", () => {
-  const stubs = {} as { id: string; user: User };
-  const mocks = {} as {
-    uuidSchema: jest.MockedObjectDeep<typeof uuidSchema>;
-    findUserDtoSchema: jest.MockedObjectDeep<typeof findUserDtoSchema>;
-    usersService: jest.MockedObjectDeep<UsersService>;
-    response: jest.MockedObjectDeep<Response>;
-    nextFunction: jest.MockedFunction<NextFunction>;
+describe("Users integration", () => {
+  const stubs = {} as { id: string; user: User; findUserDto: FindUserDto };
+  const sut = {} as {
+    repository: UsersInMemoryRepository;
+    service: UsersService;
+    controller: UsersController;
   };
-  const sut = {} as { controller: UsersController };
 
   beforeAll(() => {
     stubs.id = randomUUID();
@@ -35,77 +24,68 @@ describe("UsersController", () => {
       password: "password",
       createdAt: new Date(),
     };
-    mocks.uuidSchema = jest.mocked(uuidSchema);
-    mocks.findUserDtoSchema = jest.mocked(findUserDtoSchema);
-    mocks.findUserDtoSchema.parseAsync.mockImplementation(async (data) => {
-      const { externalId: id, ...rest } = data as User;
-      return { ...rest, id };
-    });
-    mocks.usersService = jest.mocked(new UsersService());
-    mocks.response = {
-      status: jest.fn().mockReturnThis(),
-      location: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
-    } as Partial<Response> as jest.MockedObjectDeep<Response>;
-    mocks.nextFunction = jest.fn();
-    sut.controller = new UsersController(mocks.usersService);
+    stubs.findUserDto = findUserDtoSchema.parse(stubs.user);
   });
 
   beforeEach(() => {
-    mocks.findUserDtoSchema.parseAsync.mockClear();
+    sut.repository = new UsersInMemoryRepository();
+    sut.service = new UsersService(sut.repository);
+    sut.controller = new UsersController(sut.service);
   });
 
   describe("findById", () => {
-    it("should respond with status OK and json of user for valid id", async () => {
+    it("when request.params has valid id, should respond with status OK and json of user", async () => {
       const testStubs = {} as { request: Request };
       async function arrange() {
+        sut.repository.create(stubs.user);
         testStubs.request = {
           params: { id: stubs.id },
         } as Partial<Request> as Request;
-        mocks.uuidSchema.parseAsync.mockResolvedValueOnce(stubs.id);
-        mocks.usersService.findById.mockResolvedValueOnce(stubs.user);
       }
       async function act() {
         await sut.controller.findById(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       async function assert() {
-        expect(mocks.response.status).toHaveBeenLastCalledWith(StatusCodes.OK);
-        expect(mocks.response.json).toHaveBeenLastCalledWith(
-          await mocks.findUserDtoSchema.parseAsync.mock.results[0].value
+        expect(expressMocks.response.status).toHaveBeenLastCalledWith(
+          StatusCodes.OK
+        );
+        expect(expressMocks.response.json).toHaveBeenLastCalledWith(
+          stubs.findUserDto
         );
       }
 
       await arrange().then(act).then(assert);
     });
 
-    it("should call next with error for invalid id", async () => {
-      const testStubs = {} as { id: string; request: Request };
+    it("when request has invalid id, should call next with error", async () => {
+      const testStubs = {} as { request: Request };
       async function arrange() {
-        testStubs.id = "0";
         testStubs.request = {
-          params: { id: testStubs.id },
+          params: { id: randomUUID() },
         } as Partial<Request> as Request;
-        mocks.uuidSchema.parseAsync.mockRejectedValueOnce(new Error());
       }
       async function act() {
         await sut.controller.findById(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       function assert() {
-        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
+        expect(expressMocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(
+          Error
+        );
       }
 
       await arrange().then(act).then(assert);
     });
   });
 
+  /*
   describe("findAll", () => {
     it("should respond with status OK and json of 2 users", async () => {
       const testStubs = {} as { request: Request; users: User[] };
@@ -120,13 +100,13 @@ describe("UsersController", () => {
       async function act() {
         await sut.controller.findAll(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       async function assert() {
-        expect(mocks.response.status).toHaveBeenLastCalledWith(StatusCodes.OK);
-        expect(mocks.response.json.mock.lastCall?.[0]).toHaveLength(2);
+        expect(expressMocks.response.status).toHaveBeenLastCalledWith(StatusCodes.OK);
+        expect(expressMocks.response.json.mock.lastCall?.[0]).toHaveLength(2);
       }
 
       await arrange().then(act).then(assert);
@@ -141,13 +121,13 @@ describe("UsersController", () => {
       async function act() {
         await sut.controller.findAll(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       function assert() {
-        expect(mocks.response.status).toHaveBeenLastCalledWith(StatusCodes.OK);
-        expect(mocks.response.json).toHaveBeenLastCalledWith([]);
+        expect(expressMocks.response.status).toHaveBeenLastCalledWith(StatusCodes.OK);
+        expect(expressMocks.response.json).toHaveBeenLastCalledWith([]);
       }
 
       await arrange().then(act).then(assert);
@@ -162,12 +142,12 @@ describe("UsersController", () => {
       async function act() {
         await sut.controller.findAll(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       function assert() {
-        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
+        expect(expressMocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
       }
 
       await arrange().then(act).then(assert);
@@ -202,18 +182,18 @@ describe("UsersController", () => {
       async function act() {
         return await sut.controller.create(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       async function assert() {
-        expect(mocks.response.status).toHaveBeenLastCalledWith(
+        expect(expressMocks.response.status).toHaveBeenLastCalledWith(
           StatusCodes.CREATED
         );
-        expect(mocks.response.location.mock.lastCall?.[0]).toMatch(
+        expect(expressMocks.response.location.mock.lastCall?.[0]).toMatch(
           new RegExp(`${stubs.user.externalId}`)
         );
-        expect(mocks.response.json).toHaveBeenLastCalledWith(
+        expect(expressMocks.response.json).toHaveBeenLastCalledWith(
           await mocks.findUserDtoSchema.parseAsync.mock.results[0].value
         );
       }
@@ -241,12 +221,12 @@ describe("UsersController", () => {
       async function act() {
         return await sut.controller.create(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       function assert() {
-        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
+        expect(expressMocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
       }
 
       await arrange().then(act).then(assert);
@@ -272,15 +252,16 @@ describe("UsersController", () => {
       async function act() {
         return await sut.controller.create(
           testStubs.request,
-          mocks.response,
-          mocks.nextFunction
+          expressMocks.response,
+          expressMocks.nextFunction
         );
       }
       function assert() {
-        expect(mocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
+        expect(expressMocks.nextFunction.mock.lastCall?.[0]).toBeInstanceOf(Error);
       }
 
       await arrange().then(act).then(assert);
     });
   });
+  */
 });
