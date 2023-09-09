@@ -1,5 +1,5 @@
 export const zodMocks = {
-  schema: {
-    parseAsync: jest.fn(),
+  schema: class {
+    parseAsync = jest.fn();
   },
 };

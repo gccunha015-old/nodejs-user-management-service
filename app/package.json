@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "npx jest",
-    "test:dev": "npx jest --watch",
+    "test:dev": "npx jest --watch --verbose",
     "test:coverage": "npx jest --coverage",
     "test:coverage:clean": "npm run test:coverage && npm run clean:coverage",
     "dev": "npx nodemon src/server.ts",

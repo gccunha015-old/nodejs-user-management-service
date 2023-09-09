@@ -1,3 +1,3 @@
 import { zodMocks } from "../../../../__mocks__";
 
-export const createUserDtoSchema = zodMocks.schema;
+export const createUserDtoSchema = new zodMocks.schema();
