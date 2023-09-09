@@ -2,27 +2,20 @@ name: authentication
 
 services:
   database:
-    image: postgres:15.3-alpine3.18
+    image: mongo:latest
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: ${POSTGRES_DATA}
+      MONGO_INITDB_DATABASE: authentication
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - database:${POSTGRES_DATA}
+      - database:/data/db
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
-#    networks:
-#      - authentication
+      - ${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}
 
-  # http_server:
-  #   build: http_server
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #     - authentication
+# app:
+#   build: app
+#   ports:
+#     - 3000:3000
 
 volumes:
   database:
-
-# networks:
-#   authentication:

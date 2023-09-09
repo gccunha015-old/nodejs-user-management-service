@@ -1,11 +1,14 @@
 import { Server as HttpServer } from "node:http";
 import { Server as HttpsServer } from "node:https";
+import { MongoClient } from "mongodb";
 
 export class ProcessEventsHandler {
   private readonly _server: HttpServer | HttpsServer;
+  private readonly _databaseClient: MongoClient;
 
-  constructor(server: HttpServer | HttpsServer) {
+  constructor(server: HttpServer | HttpsServer, databaseClient: MongoClient) {
     this._server = server;
+    this._databaseClient = databaseClient;
   }
 
   public setUpEventsHandling() {
@@ -34,7 +37,7 @@ export class ProcessEventsHandler {
         const server =
           this._server instanceof HttpsServer ? "HttpsServer" : "HttpServer";
         console.log(` ${server} closed`);
-        //
+        await this._databaseClient.close();
         console.log(" Database connection closed");
         process.exit(1);
       });

@@ -1,5 +1,5 @@
 import { userSchema, findUserDtoSchema } from "../../zod-schemas";
-import { UsersInMemoryRepository } from "../../users-repository";
+import { UsersRepository } from "../../users-repository";
 import { UsersService } from "../../users-service";
 import { CreateUserDto, User } from "../../types";
 
@@ -7,13 +7,13 @@ jest.unmock("../../users-service");
 describe("Unit Testing | UsersService", () => {
   const mocks = {} as {
     findUserDtoSchema: jest.MockedObjectDeep<typeof findUserDtoSchema>;
-    usersRepository: jest.MockedObjectDeep<UsersInMemoryRepository>;
+    usersRepository: jest.MockedObjectDeep<UsersRepository>;
   };
   const sut = {} as { service: UsersService };
 
   beforeAll(() => {
     mocks.findUserDtoSchema = jest.mocked(findUserDtoSchema);
-    mocks.usersRepository = jest.mocked(new UsersInMemoryRepository());
+    mocks.usersRepository = jest.mocked(new UsersRepository());
     sut.service = new UsersService(mocks.usersRepository);
   });
 

@@ -5,13 +5,16 @@ export const usersRouter = Router();
 
 usersRouter.get(
   "/:id",
-  async (req, res, nex) => await usersController.findById(req, res, nex)
+  async (request, response, next) =>
+    await usersController.findById(request, response, next)
 );
 usersRouter.get(
   "/",
-  async (req, res, nex) => await usersController.findAll(req, res, nex)
+  async (request, response, next) =>
+    await usersController.findAll(request, response, next)
 );
 usersRouter.post(
   "/",
-  async (req, res, nex) => await usersController.create(req, res, nex)
+  async (request, response, next) =>
+    await usersController.create(request, response, next)
 );
