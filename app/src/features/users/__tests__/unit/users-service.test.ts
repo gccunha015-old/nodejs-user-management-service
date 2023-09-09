@@ -31,7 +31,9 @@ describe("Unit Testing | UsersService", () => {
         await sut.service.findById(input.id);
       }
       async function assert() {
-        expect(mocks.usersRepository.findById).toHaveBeenCalledWith(input.id);
+        expect(mocks.usersRepository.findById).toHaveBeenLastCalledWith(
+          input.id
+        );
         expect(mocks.findUserDtoSchema.parseAsync).toHaveBeenCalledTimes(1);
       }
 
@@ -88,7 +90,7 @@ describe("Unit Testing | UsersService", () => {
         await sut.service.create(input.createUserDto);
       }
       async function assert() {
-        expect(suiteMocks.userSchema.parseAsync).toHaveBeenCalledWith(
+        expect(suiteMocks.userSchema.parseAsync).toHaveBeenLastCalledWith(
           input.createUserDto
         );
         expect(mocks.usersRepository.create).toHaveBeenCalledTimes(1);

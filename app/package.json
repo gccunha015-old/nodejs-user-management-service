@@ -7,14 +7,14 @@
     "test": "npx jest",
     "test:dev": "npx jest --watch --verbose",
     "test:coverage": "npx jest --coverage",
-    "test:coverage:clean": "npm run test:coverage && npm run clean:coverage",
+    "test:coverage:clean": "npm run test:coverage; npm run clean:coverage",
     "dev": "npx nodemon src/server.ts",
     "build": "npx tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
-    "clean": "npm run clean:dist && npm run clean:coverage",
+    "clean": "npm run clean:dist; npm run clean:coverage",
     "clean:dist": "rm -fr dist",
     "clean:coverage": "rm -fr coverage",
-    "clean:build": "npm run clean:dist && npm run build"
+    "clean:build": "npm run clean:dist; npm run build"
   },
   "keywords": [],
   "author": "",
