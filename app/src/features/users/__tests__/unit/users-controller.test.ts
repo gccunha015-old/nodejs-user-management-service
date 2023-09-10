@@ -1,5 +1,8 @@
 import { Request } from "express";
-import { expressMocks, expressSpies } from "../../../../__mocks__";
+import {
+  expressMocks,
+  expressSpies,
+} from "../../../../__mocks__/express-doubles";
 import { uuidSchema } from "../../../../utils";
 import { UsersController } from "../../users-controller";
 import { UsersService } from "../../users-service";

@@ -1,5 +1,5 @@
 import { Collection, FindCursor } from "mongodb";
-import { database } from "../../../../database";
+import { database } from "../../../../database/mongo-database";
 import { User } from "../../types";
 import { UsersRepository } from "../../users-repository";
 

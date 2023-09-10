@@ -42,15 +42,19 @@ describe("Unit Testing | UsersService", () => {
   });
 
   describe("findAll", () => {
-    describe.each`
-      usersRepositoryReturn
-      ${[]}
-      ${[{}]}
-      ${[{}, {}]}
-    `(
-      "when usersRepository.findAll returns $usersRepositoryReturn.length user(s)",
-      ({ usersRepositoryReturn }: { usersRepositoryReturn: User[] }) => {
-        it(`should call findUserDtoSchema.parseAsync ${usersRepositoryReturn.length} time(s)`, async () => {
+    describe("should call usersRepository.findAll 1 time and findUserDtoSchema.parseAsync", () => {
+      it.each`
+        usersRepositoryReturn
+        ${[]}
+        ${[{}]}
+        ${[{}, {}]}
+      `(
+        "$usersRepositoryReturn.length time(s)",
+        async ({
+          usersRepositoryReturn,
+        }: {
+          usersRepositoryReturn: User[];
+        }) => {
           async function arrange() {
             mocks.usersRepository.findAll.mockResolvedValueOnce(
               usersRepositoryReturn
@@ -67,9 +71,9 @@ describe("Unit Testing | UsersService", () => {
           }
 
           await arrange().then(act).then(assert);
-        });
-      }
-    );
+        }
+      );
+    });
   });
 
   describe("create", () => {

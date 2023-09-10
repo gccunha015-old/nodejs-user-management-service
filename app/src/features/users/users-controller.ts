@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { BASE_URL, uuidSchema } from "../../utils";
+import { env } from "../../config";
+import { uuidSchema } from "../../utils";
 import { IUsersController, IUsersService } from "./types";
 import { createUserDtoSchema } from "./zod-schemas";
 import { usersService } from "./users-service";
 
 export class UsersController implements IUsersController {
-  private readonly _baseUrl = `${BASE_URL}/users`;
+  private readonly _baseUrl = `${env.BASE_URL}/users`;
   private readonly _service: IUsersService;
 
   constructor(service: IUsersService = usersService) {
