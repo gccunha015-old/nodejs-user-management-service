@@ -1,8 +1,10 @@
 # Node.js Authentication Service
 
 <div align="center">
-  <img src="_docs/diagrams/container.png" height="600"
-  alt="C4 Container Diagram">
+  <a href="https://whimsical.com/software-architecture-QS8DUbdZoHU8K8DAZrAfww">
+    <img src="_docs/diagrams/container.png" height="600"
+    alt="C4 Container Diagram">
+  </a>
 </div>
 
 ## About
