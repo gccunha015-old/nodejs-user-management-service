@@ -3,14 +3,16 @@ import { database } from "../../database";
 import { IUsersRepository, User } from "./types";
 
 export class UsersRepository implements IUsersRepository {
-  private readonly _users: Collection<User>;
+  private readonly _usersCollection: Collection<User>;
 
-  constructor(users: Collection<User> = database.collection<User>("users")) {
-    this._users = users;
+  constructor(
+    usersCollection: Collection<User> = database.collection<User>("users")
+  ) {
+    this._usersCollection = usersCollection;
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this._users.findOne<User>(
+    const user = await this._usersCollection.findOne<User>(
       { externalId: id },
       { projection: { _id: 0 } }
     );
@@ -19,11 +21,13 @@ export class UsersRepository implements IUsersRepository {
   }
 
   async findAll(): Promise<User[]> {
-    return this._users.find<User>({}, { projection: { _id: 0 } }).toArray();
+    return this._usersCollection
+      .find<User>({}, { projection: { _id: 0 } })
+      .toArray();
   }
 
   async create(newUser: User): Promise<User> {
-    await this._users.insertOne(newUser);
+    await this._usersCollection.insertOne(newUser);
     return this.findById(newUser.externalId);
   }
 }
