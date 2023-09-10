@@ -15,7 +15,7 @@ REST API service to authenticate users.
 
 [![Node.js][nodejs-badge]][nodejs-url]
 [![TypeScript][typescript-badge]][typescript-url]
-[![PostgreSQL][postgresql-badge]][postgresql-url]
+[![MongoDB][mongodb-badge]][mongodb-url]
 [![Docker][docker-badge]][docker-url]
 
 </div>
@@ -69,7 +69,8 @@ REST API service to authenticate users.
 - [How to build a Back-end portfolio?]
 - [The C4 model]
 - Diagrams made with [Whimsical]
-- [Node.js][icons8-nodejs], [Docker][icons8-docker], [PostgreSQL][icons8-postgresql] and [Computer][icons8-computer] icons by [Icons8]
+- [Node.js][icons8-nodejs], [Docker][icons8-docker] and [Computer][icons8-computer] icons by [Icons8]
+- [MongoDB][mongodb-press-kit] icon by [MongoDB][mongodb-url]
 - [Node.js in 2022 || Creating & Testing a Complete Node.js Rest API || No Framework || Erick Wendel][erick-wendel-1]
 - [Best README Template]
 - [How to create a WebAPI with Node.js, Express and Typescript][luiz-tools-1]
@@ -89,8 +90,8 @@ REST API service to authenticate users.
 [nodejs-url]: https://nodejs.org/en
 [typescript-badge]: https://img.shields.io/badge/TypeScript-358EF1?style=for-the-badge&logo=typescript&logoColor=white
 [typescript-url]: https://www.typescriptlang.org/
-[postgresql-badge]: https://img.shields.io/badge/PostgreSQL-0064a5?style=for-the-badge&logo=postgresql&logoColor=white
-[postgresql-url]: https://www.postgresql.org/
+[mongodb-badge]: https://img.shields.io/badge/MongoDB-001e2b?style=for-the-badge&logo=mongodb&logoColor=00ed64
+[mongodb-url]: https://www.mongodb.com/
 [docker-badge]: https://img.shields.io/badge/Docker-0db7ed?style=for-the-badge&logo=docker&logoColor=white
 [docker-url]: https://www.docker.com/
 [How to build a Back-end portfolio?]: https://www.youtube.com/watch?v=sTUbOGf9V1U
@@ -98,8 +99,8 @@ REST API service to authenticate users.
 [Whimsical]: https://whimsical.com/
 [icons8-nodejs]: https://icons8.com/icon/hsPbhkOH4FMe/node-js
 [icons8-docker]: https://icons8.com/icon/cdYUlRaag9G9/docker
-[icons8-postgresql]: https://icons8.com/icon/38561/postgresql
 [icons8-computer]: https://icons8.com/icon/Qh2tCGOAtV52/workstation
+[mongodb-press-kit]: https://brandfolder.com/mongodb/press-kit
 [Icons8]: https://icons8.com
 [erick-wendel-1]: https://www.youtube.com/watch?v=xR4D2bp8_S0
 [erick-wendel-2]: https://www.youtube.com/watch?v=ge31HzWk5T8
