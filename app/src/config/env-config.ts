@@ -8,7 +8,13 @@ export const env: Env = {
   HOST: ENV.APP_HOST || "localhost",
   PORT: Number.parseInt(ENV.APP_PORT || "3000"),
   BASE_URL: "",
-  MONGO_URI: `mongodb://${ENV.MONGO_USER}:${ENV.MONGO_PASSWORD}@${ENV.MONGO_HOST}:${ENV.MONGO_PORT}/${ENV.MONGO_DATABASE}`,
+  MONGO_USER: ENV.MONGO_USER || "username",
+  MONGO_PASSWORD: ENV.MONGO_PASSWORD || "password",
+  MONGO_HOST: ENV.MONGO_HOST || "localhost",
+  MONGO_PORT: Number.parseInt(ENV.MONGO_PORT || "27017"),
+  MONGO_DATABASE: ENV.MONGO_DATABASE || "authentication",
+  MONGO_URI: "",
 };
 
 env.BASE_URL = `${env.PROTOCOL}://${env.HOST}:${env.PORT}`;
+env.MONGO_URI = `mongodb://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_HOST}:${env.MONGO_PORT}/${env.MONGO_DATABASE}`;

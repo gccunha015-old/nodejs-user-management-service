@@ -1,5 +1,9 @@
+# blacklist
 .vscode
 node_modules
 .env
 dist
 coverage
+
+# whitelist
+!.env.example

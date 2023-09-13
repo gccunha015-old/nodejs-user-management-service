@@ -1,10 +1,7 @@
 import { Server } from "node:http";
-import { once, EventEmitter } from "node:events";
 import { MongoClient } from "mongodb";
 import { mongoClient } from "../../database";
 import { ProcessEventsHandler } from "../process-events-handler";
-
-import {} from "node:process";
 
 jest.unmock("../process-events-handler");
 describe("Unit Testing | ProcessEventsHandler", () => {
@@ -12,7 +9,7 @@ describe("Unit Testing | ProcessEventsHandler", () => {
     process: {
       once: jest.SpyInstance;
       on: jest.SpyInstance;
-      listeners: jest.SpyInstance;
+      exit: jest.SpyInstance;
     };
     console: { log: jest.SpyInstance };
   };
@@ -24,11 +21,11 @@ describe("Unit Testing | ProcessEventsHandler", () => {
 
   beforeAll(() => {
     spies.process = {
-      once: jest.spyOn(process, "once"),
-      on: jest.spyOn(process, "on"),
-      listeners: jest.spyOn(process, "listeners"),
+      once: jest.spyOn(process, "once").mockImplementation(),
+      on: jest.spyOn(process, "on").mockImplementation(),
+      exit: jest.spyOn(process, "exit").mockImplementation(),
     };
-    spies.console = { log: jest.spyOn(console, "log") };
+    spies.console = { log: jest.spyOn(console, "log").mockImplementation() };
     mocks.httpServer = jest.mocked(new Server());
     mocks.databaseClient = jest.mocked(mongoClient);
     sut.processEventsHandler = new ProcessEventsHandler(
@@ -38,25 +35,32 @@ describe("Unit Testing | ProcessEventsHandler", () => {
   });
 
   describe("setUpEventsHandling", () => {
+    const suiteCalls = {} as { process: { once: [string, Function][] } };
+
     beforeAll(() => {
       sut.processEventsHandler.setUpEventsHandling();
+      suiteCalls.process = { once: spies.process.once.mock.calls };
     });
 
     describe("should call _setUpSignalsHandling", () => {
-      it("that calls process.once with SIGINT and SIGTERM", () => {
-        const sigintListeners = process.listeners("SIGINT");
-        const sigtermListeners = process.listeners("SIGTERM");
-        console.log(sigintListeners);
-      });
-
-      // it("when SIGINT is emited should call _gracefulShutdown internal closure", async () => {
-      //   const eventEmitter = new EventEmitter();
-      //   process.nextTick(() => {
-      //     eventEmitter.emit("SIGINT");
-      //   });
-      //   await once(eventEmitter, "SIGINT");
-      //   expect(spies.console.log).toHaveBeenCalledTimes(3);
+      // it("that calls process.once with SIGINT and SIGTERM", () => {
+      //   const callsSignals = suiteCalls.process.once.map(([signal]) => signal);
+      //   expect(callsSignals[0]).toBe("SIGINT");
+      //   expect(callsSignals[1]).toBe("SIGTERM");
       // });
+
+      it("when SIGINT is emited should call _gracefulShutdown internal closure", async () => {
+        const callsListeners = suiteCalls.process.once.map(
+          ([_, listener]) => listener
+        );
+        try {
+          await callsListeners[0]();
+        } catch (error: unknown) {
+          spies.console.log.mockRestore();
+          console.log(error);
+        }
+        // expect(spies.console.log).toHaveBeenCalledTimes(3);
+      });
     });
 
     // describe("should call _setUpUnexpectedErrorsHandling", () => {

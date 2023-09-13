@@ -1,3 +1,5 @@
 import { MongoClient } from "mongodb";
 
-export const mongoClient = {} as jest.MockedObjectDeep<MongoClient>;
+export const mongoClient = {
+  close: jest.fn(),
+} as jest.MockedObjectDeep<MongoClient>;
