@@ -27,6 +27,9 @@ describe("Unit Testing | ProcessEventsHandler", () => {
     };
     spies.console = { log: jest.spyOn(console, "log").mockImplementation() };
     mocks.httpServer = jest.mocked(new Server());
+    mocks.httpServer.close = jest
+      .fn()
+      .mockImplementation((callback) => callback());
     mocks.databaseClient = jest.mocked(mongoClient);
     sut.processEventsHandler = new ProcessEventsHandler(
       mocks.httpServer,
@@ -34,41 +37,57 @@ describe("Unit Testing | ProcessEventsHandler", () => {
     );
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe("setUpEventsHandling", () => {
-    const suiteCalls = {} as { process: { once: [string, Function][] } };
+    const suiteCalls = { process: { once: [], on: [] } } as {
+      process: {
+        once: { event: string; listener: Function }[];
+        on: { event: string; listener: Function }[];
+      };
+    };
 
-    beforeAll(() => {
+    beforeEach(() => {
       sut.processEventsHandler.setUpEventsHandling();
-      suiteCalls.process = { once: spies.process.once.mock.calls };
-    });
-
-    describe("should call _setUpSignalsHandling", () => {
-      // it("that calls process.once with SIGINT and SIGTERM", () => {
-      //   const callsSignals = suiteCalls.process.once.map(([signal]) => signal);
-      //   expect(callsSignals[0]).toBe("SIGINT");
-      //   expect(callsSignals[1]).toBe("SIGTERM");
-      // });
-
-      it("when SIGINT is emited should call _gracefulShutdown internal closure", async () => {
-        const callsListeners = suiteCalls.process.once.map(
-          ([_, listener]) => listener
-        );
-        try {
-          await callsListeners[0]();
-        } catch (error: unknown) {
-          spies.console.log.mockRestore();
-          console.log(error);
+      const processCalls = {
+        once: spies.process.once.mock.calls as [string, Function][],
+        on: spies.process.on.mock.calls as [string, Function][],
+      };
+      (Object.keys(processCalls) as (keyof typeof processCalls)[]).forEach(
+        (key) => {
+          processCalls[key].forEach(([event, listener]) => {
+            suiteCalls.process[key].push({ event, listener });
+          });
         }
-        // expect(spies.console.log).toHaveBeenCalledTimes(3);
-      });
+      );
     });
 
-    // describe("should call _setUpUnexpectedErrorsHandling", () => {
-    //   it("that calls process.on with uncaughtException and unhandledRejection", () => {
-    //     const processOnCalls = spies.process.on.mock.calls;
-    //     expect(processOnCalls[0][0]).toBe("uncaughtException");
-    //     expect(processOnCalls[1][0]).toBe("unhandledRejection");
-    //   });
-    // });
+    it("should call _setUpSignalsHandling", () => {
+      expect(suiteCalls.process.once[0].event).toBe("SIGINT");
+      expect(suiteCalls.process.once[1].event).toBe("SIGTERM");
+    });
+
+    it("should call _setUpUnexpectedErrorsHandling", () => {
+      expect(suiteCalls.process.on[0].event).toBe("uncaughtException");
+      expect(suiteCalls.process.on[1].event).toBe("unhandledRejection");
+    });
+
+    it("when SIGINT or SIGTERM occurs, should call _setUpGracefulShutdown internal closure", async () => {
+      await suiteCalls.process.once[0].listener();
+      expect(mocks.httpServer.close).toHaveBeenCalledTimes(1);
+      expect(mocks.databaseClient.close).toHaveBeenCalledTimes(1);
+    });
+
+    it("when an uncaughtException occurs, should call the attached listerner", () => {
+      suiteCalls.process.on[0].listener();
+      expect(spies.console.log).toHaveBeenCalledTimes(1);
+    });
+
+    it("when an unhandledRejection occurs, should call the attached listerner", () => {
+      suiteCalls.process.on[1].listener();
+      expect(spies.console.log).toHaveBeenCalledTimes(1);
+    });
   });
 });

@@ -17,8 +17,8 @@ export class ProcessEventsHandler {
   }
 
   private _setUpSignalsHandling() {
-    process.once("SIGINT", this._gracefulShutdown());
-    process.once("SIGTERM", this._gracefulShutdown());
+    process.once("SIGINT", this._setUpGracefulShutdown());
+    process.once("SIGTERM", this._setUpGracefulShutdown());
   }
 
   private _setUpUnexpectedErrorsHandling() {
@@ -30,10 +30,11 @@ export class ProcessEventsHandler {
     });
   }
 
-  private _gracefulShutdown() {
+  private _setUpGracefulShutdown() {
     return (event: string) => {
       console.log(`\n${event}:`);
       this._server.close(async () => {
+        /* istanbul ignore next */
         const server =
           this._server instanceof HttpsServer ? "HttpsServer" : "HttpServer";
         console.log(` ${server} closed`);
