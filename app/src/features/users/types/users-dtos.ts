@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createUserDtoSchema, findUserDtoSchema } from "../zod-parsers";
+import { createUserDtoTransform, findUserDtoTransform } from "../zod-parsers";
 
-export type CreateUserDto = z.infer<typeof createUserDtoSchema>;
-export type FindUserDto = z.infer<typeof findUserDtoSchema>;
+export type CreateUserDto = z.infer<typeof createUserDtoTransform>;
+export type FindUserDto = z.infer<typeof findUserDtoTransform>;

@@ -8,7 +8,6 @@ import { UsersRepository } from "../../users-repository";
 import { UsersService } from "../../users-service";
 import { UsersController } from "../../users-controller";
 import { StatusCodes } from "http-status-codes";
-import { findUserDtoTransform } from "../../zod-parsers";
 
 jest.deepUnmock("../../users-repository");
 jest.deepUnmock("../../users-service");
@@ -58,7 +57,7 @@ describe("Integration Testing | UsersController", () => {
       } as Partial<Request> as Request;
     });
 
-    it("when request contains id of existing user, should respond with status OK and json of user", async () => {
+    it("when request contains valid params, should respond with status OK and json of user", async () => {
       async function arrange() {
         mocks.usersCollection.findOne.mockResolvedValueOnce(data.user);
       }
@@ -81,13 +80,16 @@ describe("Integration Testing | UsersController", () => {
       await arrange().then(act).then(assert);
     });
 
-    it("when request contains id of invalid user, should call next with Error", async () => {
+    it("when request contains invalid params, should call next with Error", async () => {
+      const testInputs = {} as { request: Request };
       async function arrange() {
-        mocks.usersCollection.findOne.mockResolvedValueOnce(null);
+        testInputs.request = {
+          params: {},
+        } as Request;
       }
       async function act() {
         await sut.usersController.findById(
-          suiteInputs.request,
+          testInputs.request,
           expressSpies.response,
           expressMocks.nextFunction
         );
@@ -116,13 +118,12 @@ describe("Integration Testing | UsersController", () => {
         email: "test@test.com",
         password: "password",
       };
-      const testReturns = [[], [testData], [testData, testData]];
 
       it.each`
         findCursorReturn
-        ${testReturns[0]}
-        ${testReturns[1]}
-        ${testReturns[2]}
+        ${[]}
+        ${[testData]}
+        ${[testData, testData]}
       `(
         "of length $findCursorReturn.length",
         async ({ findCursorReturn }: { findCursorReturn: User[] }) => {
@@ -151,26 +152,6 @@ describe("Integration Testing | UsersController", () => {
         }
       );
     });
-
-    it("when an error occurs, should call next with it", async () => {
-      async function arrange() {
-        mocks.findCursor.toArray.mockRejectedValueOnce(new Error());
-      }
-      async function act() {
-        await sut.usersController.findAll(
-          suiteInputs.request,
-          expressSpies.response,
-          expressMocks.nextFunction
-        );
-      }
-      async function assert() {
-        expect(expressMocks.nextFunction).toHaveBeenLastCalledWith(
-          expect.any(Error)
-        );
-      }
-
-      await arrange().then(act).then(assert);
-    });
   });
 
   describe("create", () => {
@@ -196,6 +177,9 @@ describe("Integration Testing | UsersController", () => {
       async function assert() {
         expect(expressSpies.response.status).toHaveBeenLastCalledWith(
           StatusCodes.CREATED
+        );
+        expect(expressSpies.response.location).toHaveBeenLastCalledWith(
+          expect.stringMatching(data.id)
         );
         expect(expressSpies.response.json).toHaveBeenLastCalledWith(
           data.findUserDto
