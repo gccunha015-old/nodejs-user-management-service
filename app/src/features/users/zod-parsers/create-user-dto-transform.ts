@@ -1,4 +1,4 @@
-import { emailSchema, hashString } from "../../../utils";
+import { hashString } from "../../../utils";
 import { userSchema } from "./user-schema";
 
 export const createUserDtoTransform = userSchema
@@ -6,7 +6,7 @@ export const createUserDtoTransform = userSchema
     email: true,
     password: true,
   })
-  .transform(async ({ email, password }) => ({
-    email: await emailSchema.parseAsync(email).then(hashString),
+  .transform(async ({ password, ...rest }) => ({
     password: await hashString(password),
+    ...rest,
   }));
