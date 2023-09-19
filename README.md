@@ -39,14 +39,11 @@ REST API service to authenticate users.
 
 <ul type="none">
   <li>✅ Add C4 container diagram</li>
-  <li>⬜ Define database schema
+  <li>✅ Define database schema
     <ul type="none">
       <li>✅ users</li>
-      <li>⬜ sessions</li>
-      <li>⬜ users_logs</li>
-      <li>⬜ sessions_logs</li>
-      <li>⬜ log_actions</li>
-      <li>⬜ log_actions_logs</li>
+      <li>✅ users_logs</li>
+      <li>✅ log_actions</li>
     </ul>
   </li>
   <li>⬜ Implement, test and document API
