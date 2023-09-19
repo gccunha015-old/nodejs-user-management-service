@@ -1,4 +1,4 @@
-import { userSchema, findUserDtoSchema } from "../../zod-schemas";
+import { userSchema, findUserDtoTransform } from "../../zod-parsers";
 import { UsersRepository } from "../../users-repository";
 import { UsersService } from "../../users-service";
 import { CreateUserDto, User } from "../../types";
@@ -6,13 +6,13 @@ import { CreateUserDto, User } from "../../types";
 jest.unmock("../../users-service");
 describe("Unit Testing | UsersService", () => {
   const mocks = {} as {
-    findUserDtoSchema: jest.MockedObjectDeep<typeof findUserDtoSchema>;
+    findUserDtoTransform: jest.MockedObjectDeep<typeof findUserDtoTransform>;
     usersRepository: jest.MockedObjectDeep<UsersRepository>;
   };
   const sut = {} as { service: UsersService };
 
   beforeAll(() => {
-    mocks.findUserDtoSchema = jest.mocked(findUserDtoSchema);
+    mocks.findUserDtoTransform = jest.mocked(findUserDtoTransform);
     mocks.usersRepository = jest.mocked(new UsersRepository());
     sut.service = new UsersService(mocks.usersRepository);
   });
@@ -22,7 +22,7 @@ describe("Unit Testing | UsersService", () => {
   });
 
   describe("findById", () => {
-    it("should call usersRepository.findById and findUserDtoSchema.parseAsync", async () => {
+    it("should call usersRepository.findById and findUserDtoTransform.parseAsync", async () => {
       const input = {} as { id: string };
       async function arrange() {
         input.id = "0";
@@ -34,7 +34,7 @@ describe("Unit Testing | UsersService", () => {
         expect(mocks.usersRepository.findById).toHaveBeenLastCalledWith(
           input.id
         );
-        expect(mocks.findUserDtoSchema.parseAsync).toHaveBeenCalledTimes(1);
+        expect(mocks.findUserDtoTransform.parseAsync).toHaveBeenCalledTimes(1);
       }
 
       await arrange().then(act).then(assert);
@@ -42,7 +42,7 @@ describe("Unit Testing | UsersService", () => {
   });
 
   describe("findAll", () => {
-    describe("should call usersRepository.findAll 1 time and findUserDtoSchema.parseAsync", () => {
+    describe("should call usersRepository.findAll 1 time and findUserDtoTransform.parseAsync", () => {
       it.each`
         usersRepositoryReturn
         ${[]}
@@ -65,7 +65,7 @@ describe("Unit Testing | UsersService", () => {
           }
           async function assert() {
             expect(mocks.usersRepository.findAll).toHaveBeenCalledTimes(1);
-            expect(mocks.findUserDtoSchema.parseAsync).toHaveBeenCalledTimes(
+            expect(mocks.findUserDtoTransform.parseAsync).toHaveBeenCalledTimes(
               usersRepositoryReturn.length
             );
           }
@@ -85,7 +85,7 @@ describe("Unit Testing | UsersService", () => {
       suiteMocks.userSchema = jest.mocked(userSchema);
     });
 
-    it("should call userSchema.parseAsync, usersRepository.create and findUserDtoSchema.parseAsync", async () => {
+    it("should call userSchema.parseAsync, usersRepository.create and findUserDtoTransform.parseAsync", async () => {
       const input = {} as { createUserDto: CreateUserDto };
       async function arrange() {
         input.createUserDto = {} as CreateUserDto;
@@ -98,7 +98,7 @@ describe("Unit Testing | UsersService", () => {
           input.createUserDto
         );
         expect(mocks.usersRepository.create).toHaveBeenCalledTimes(1);
-        expect(mocks.findUserDtoSchema.parseAsync).toHaveBeenCalledTimes(1);
+        expect(mocks.findUserDtoTransform.parseAsync).toHaveBeenCalledTimes(1);
       }
 
       await arrange().then(act).then(assert);

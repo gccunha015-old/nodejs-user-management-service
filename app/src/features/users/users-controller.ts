@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { env } from "../../config";
 import { uuidSchema } from "../../utils";
 import { IUsersController, IUsersService } from "./types";
-import { createUserDtoSchema } from "./zod-schemas";
+import { createUserDtoTransform } from "./zod-parsers";
 import { usersService } from "./users-service";
 
 export class UsersController implements IUsersController {
@@ -47,7 +47,9 @@ export class UsersController implements IUsersController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const createUserDto = await createUserDtoSchema.parseAsync(request.body);
+      const createUserDto = await createUserDtoTransform.parseAsync(
+        request.body
+      );
       const findUserDto = await this._service.create(createUserDto);
       response
         .status(StatusCodes.CREATED)

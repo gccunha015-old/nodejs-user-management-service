@@ -1,4 +1,5 @@
 import { Collection, FindCursor } from "mongodb";
+import { mongoMocks } from "../../../../__mocks__";
 import { database } from "../../../../database/mongo-database";
 import { User } from "../../types";
 import { UsersRepository } from "../../users-repository";
@@ -6,12 +7,15 @@ import { UsersRepository } from "../../users-repository";
 jest.unmock("../../users-repository");
 describe("Unit Testing | UsersRepository", () => {
   const mocks = {} as {
+    findCursor: jest.MockedObject<FindCursor>;
     usersCollection: jest.MockedObjectDeep<Collection<User>>;
   };
   const sut = {} as { repository: UsersRepository };
 
   beforeAll(() => {
+    mocks.findCursor = mongoMocks.createFindCursor();
     mocks.usersCollection = jest.mocked(database.collection(""));
+    mocks.usersCollection.find.mockReturnValue(mocks.findCursor);
     sut.repository = new UsersRepository(mocks.usersCollection);
   });
 
@@ -40,7 +44,7 @@ describe("Unit Testing | UsersRepository", () => {
       await arrange().then(act).then(assert);
     });
 
-    it("should call usersCollection.findOne and throw Error", async () => {
+    it("should call usersCollection.findOne and throw Error('User with id ${id} doesn't exist')", async () => {
       const input = {} as { id: string };
       async function arrange() {
         input.id = "0";
@@ -54,7 +58,9 @@ describe("Unit Testing | UsersRepository", () => {
       }
       async function assert(actResult: unknown) {
         expect(mocks.usersCollection.findOne).toHaveBeenCalledTimes(1);
-        expect(actResult).toBeInstanceOf(Error);
+        expect(actResult).toStrictEqual(
+          Error(`User with id ${input.id} doesn't exist`)
+        );
       }
 
       await arrange().then(act).then(assert);
@@ -69,9 +75,7 @@ describe("Unit Testing | UsersRepository", () => {
       }
       async function assert() {
         expect(mocks.usersCollection.find).toHaveBeenCalledTimes(1);
-        const findCursorMock = mocks.usersCollection.find.mock.results[0]
-          .value as jest.MockedObjectDeep<FindCursor>;
-        expect(findCursorMock.toArray).toHaveBeenCalledTimes(1);
+        expect(mocks.findCursor.toArray).toHaveBeenCalledTimes(1);
       }
 
       await arrange().then(act).then(assert);

@@ -6,7 +6,7 @@ import {
 import { uuidSchema } from "../../../../utils";
 import { UsersController } from "../../users-controller";
 import { UsersService } from "../../users-service";
-import { createUserDtoSchema } from "../../zod-schemas";
+import { createUserDtoTransform } from "../../zod-parsers";
 import { FindUserDto } from "../../types";
 
 jest.unmock("../../users-controller");
@@ -141,26 +141,28 @@ describe("Unit Testing | UsersController", () => {
   describe("create", () => {
     const suiteInputs = {} as { request: Request };
     const suiteMocks = {} as {
-      createUserDtoSchema: jest.MockedObjectDeep<typeof createUserDtoSchema>;
+      createUserDtoTransform: jest.MockedObjectDeep<
+        typeof createUserDtoTransform
+      >;
     };
 
     beforeAll(() => {
       suiteInputs.request = {
         body: {},
       } as Partial<Request> as Request;
-      suiteMocks.createUserDtoSchema = jest.mocked(createUserDtoSchema);
+      suiteMocks.createUserDtoTransform = jest.mocked(createUserDtoTransform);
     });
 
-    it("should call createUserDtoSchema.parseAsync, usersService.create, response.status, response.location and response.json", async () => {
+    it("should call createUserDtoTransform.parseAsync, usersService.create, response.status, response.location and response.json", async () => {
       const testStubReturns = {} as {
-        createUserDtoSchema: { parseAsync: FindUserDto };
+        createUserDtoTransform: { parseAsync: FindUserDto };
       };
       async function arrange() {
-        testStubReturns.createUserDtoSchema = {
+        testStubReturns.createUserDtoTransform = {
           parseAsync: { id: "0" } as FindUserDto,
         };
         mocks.usersService.create.mockResolvedValueOnce(
-          testStubReturns.createUserDtoSchema.parseAsync
+          testStubReturns.createUserDtoTransform.parseAsync
         );
       }
       async function act() {
@@ -172,7 +174,7 @@ describe("Unit Testing | UsersController", () => {
       }
       async function assert() {
         expect(
-          suiteMocks.createUserDtoSchema.parseAsync
+          suiteMocks.createUserDtoTransform.parseAsync
         ).toHaveBeenLastCalledWith(suiteInputs.request.body);
         expect(mocks.usersService.create).toHaveBeenCalledTimes(1);
         expect(expressSpies.response.status).toHaveBeenCalledTimes(1);
@@ -185,12 +187,12 @@ describe("Unit Testing | UsersController", () => {
 
     it("when an error occurs, should call next with it", async () => {
       const testStubReturns = {} as {
-        createUserDtoSchema: { parseAsync: Error };
+        createUserDtoTransform: { parseAsync: Error };
       };
       async function arrange() {
-        testStubReturns.createUserDtoSchema = { parseAsync: new Error() };
-        suiteMocks.createUserDtoSchema.parseAsync.mockRejectedValueOnce(
-          testStubReturns.createUserDtoSchema.parseAsync
+        testStubReturns.createUserDtoTransform = { parseAsync: new Error() };
+        suiteMocks.createUserDtoTransform.parseAsync.mockRejectedValueOnce(
+          testStubReturns.createUserDtoTransform.parseAsync
         );
       }
       async function act() {
@@ -202,10 +204,10 @@ describe("Unit Testing | UsersController", () => {
       }
       async function assert() {
         expect(
-          suiteMocks.createUserDtoSchema.parseAsync
+          suiteMocks.createUserDtoTransform.parseAsync
         ).toHaveBeenLastCalledWith(suiteInputs.request.body);
         expect(expressMocks.nextFunction).toHaveBeenLastCalledWith(
-          testStubReturns.createUserDtoSchema.parseAsync
+          testStubReturns.createUserDtoTransform.parseAsync
         );
       }
 

@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { dateSchema, emailSchema, uuidSchema } from "../../../utils";
+import { dateSchema, uuidSchema } from "../../../utils";
 
 export const userSchema = z
   .object({
     externalId: uuidSchema.default(randomUUID),
-    email: emailSchema,
+    email: z.string(),
     password: z.string().min(8),
     createdAt: dateSchema.default(new Date()),
   })

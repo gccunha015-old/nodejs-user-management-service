@@ -1,4 +1,4 @@
-import { userSchema, findUserDtoSchema } from "./zod-schemas";
+import { userSchema, findUserDtoTransform } from "./zod-parsers";
 import {
   IUsersService,
   IUsersRepository,
@@ -16,20 +16,20 @@ export class UsersService implements IUsersService {
 
   async findById(id: string): Promise<FindUserDto> {
     const user = await this._repository.findById(id);
-    return await findUserDtoSchema.parseAsync(user);
+    return await findUserDtoTransform.parseAsync(user);
   }
 
   async findAll(): Promise<FindUserDto[]> {
     const users = await this._repository.findAll();
     return await Promise.all(
-      users.map((user) => findUserDtoSchema.parseAsync(user))
+      users.map((user) => findUserDtoTransform.parseAsync(user))
     );
   }
 
   async create(createUserDto: CreateUserDto): Promise<FindUserDto> {
     const newUser = await userSchema.parseAsync(createUserDto);
     const user = await this._repository.create(newUser);
-    return await findUserDtoSchema.parseAsync(user);
+    return await findUserDtoTransform.parseAsync(user);
   }
 }
 

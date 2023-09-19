@@ -1,8 +1,8 @@
-import { ZodSchema } from "zod";
+import { ZodType } from "zod";
 
 export const zodMocks = {
-  createSchema: () =>
+  createZodType: () =>
     ({
       parseAsync: jest.fn(),
-    } as Partial<ZodSchema> as jest.MockedObject<ZodSchema>),
+    } as Partial<ZodType> as jest.MockedObject<ZodType>),
 };
