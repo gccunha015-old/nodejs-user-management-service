@@ -1,7 +1,7 @@
-# Node.js Authentication Service
+# Node.js User Management Service
 
 <div align="center">
-  <a href="https://whimsical.com/software-architecture-QS8DUbdZoHU8K8DAZrAfww">
+  <a href="https://whimsical.com/container-QS8DUbdZoHU8K8DAZrAfww">
     <img src="_docs/diagrams/container.png" height="600"
     alt="C4 Container Diagram">
   </a>
@@ -9,7 +9,7 @@
 
 ## About
 
-REST API service to authenticate users.
+REST API service to manage users.
 
 ### Built with
 
@@ -21,7 +21,7 @@ REST API service to authenticate users.
 [![Docker][docker-badge]][docker-url]
 
 </div>
-<p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
+<p align="right">(<a href="#nodejs-user-management-service">back to top ⬆️</a>)</p>
 
 ## Getting started
 
@@ -29,11 +29,11 @@ REST API service to authenticate users.
 
 ### Installation
 
-<p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
+<p align="right">(<a href="#nodejs-user-management-service">back to top ⬆️</a>)</p>
 
 ## Usage
 
-<p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
+<p align="right">(<a href="#nodejs-user-management-service">back to top ⬆️</a>)</p>
 
 ## Roadmap
 
@@ -60,7 +60,7 @@ REST API service to authenticate users.
   <li>⬜ Deploy demo</li>
 </ul>
 
-<p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
+<p align="right">(<a href="#nodejs-user-management-service">back to top ⬆️</a>)</p>
 
 ## Acknowledgments
 
@@ -80,7 +80,7 @@ REST API service to authenticate users.
 - [How to mock (Express) Response in tests - Node.js - TypeScript][coding-like-david-1]
 - [Mocks Aren't Stubs][martin-fowler-1]
 
-<p align="right">(<a href="#nodejs-authentication-service">back to top ⬆️</a>)</p>
+<p align="right">(<a href="#nodejs-user-management-service">back to top ⬆️</a>)</p>
 
 <!-- Markdown links and images -->
 
