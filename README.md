@@ -41,9 +41,8 @@ REST API service to authenticate users.
   <li>✅ Add C4 container diagram</li>
   <li>✅ Define database schema
     <ul type="none">
-      <li>✅ users</li>
-      <li>✅ users_logs</li>
-      <li>✅ log_actions</li>
+      <li>✅ c_users</li>
+      <li>✅ c_users_history</li>
     </ul>
   </li>
   <li>⬜ Implement, test and document API
