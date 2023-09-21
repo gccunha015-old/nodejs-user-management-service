@@ -1,21 +1,19 @@
-name: authentication
+name: user-management
 
 services:
-  database:
-    image: mongo:latest
-    environment:
-      MONGO_INITDB_DATABASE: authentication
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+  mongo:
+    build: mongo
+    env_file: mongo/.env
     volumes:
-      - database:/data/db
+      - mongo:/data/db
     ports:
       - ${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}
 
-# app:
-#   build: app
-#   ports:
-#     - 3000:3000
+  # node:
+  #   build: node
+  #   env_file: node/.env
+  #   ports:
+  #     - ${NODE_HOST_PORT}:${NODE_CONTAINER_PORT}
 
 volumes:
-  database:
+  mongo:
