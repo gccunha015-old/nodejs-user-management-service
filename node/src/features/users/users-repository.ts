@@ -1,4 +1,4 @@
-import { Collection } from "mongodb";
+import { Collection, UUID } from "mongodb";
 import { database } from "../../database";
 import { IUsersRepository, User } from "./types";
 
@@ -13,7 +13,7 @@ export class UsersRepository implements IUsersRepository {
 
   async findById(id: string): Promise<User> {
     const user = await this._usersCollection.findOne<User>(
-      { externalId: id },
+      { externalId: new UUID(id) },
       { projection: { _id: 0 } }
     );
     if (!user) throw new Error(`User with id ${id} doesn't exist`);
@@ -27,7 +27,8 @@ export class UsersRepository implements IUsersRepository {
   }
 
   async create(newUser: User): Promise<User> {
-    await this._usersCollection.insertOne(newUser);
+    newUser.externalId = new UUID(newUser.externalId);
+    await this._usersCollection.insertOne();
     return this.findById(newUser.externalId);
   }
 }

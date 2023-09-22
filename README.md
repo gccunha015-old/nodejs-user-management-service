@@ -41,12 +41,9 @@ REST API service to manage users.
   <li>✅ Add C4 container diagram</li>
   <li>✅ Define database schema
     <ul type="none">
-      <li>✅ c_users</li>
-      <li>✅ c_users_history</li>
-      <li>⬜ c_roles</li>
-      <li>⬜ c_roles_history</li>
-      <li>⬜ c_permissions</li>
-      <li>⬜ c_permissions_history</li>
+      <li>✅ users</li>
+      <li>✅ roles</li>
+      <li>✅ permissions</li>
     </ul>
   </li>
   <li>⬜ Implement, test and document API

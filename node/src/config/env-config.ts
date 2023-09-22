@@ -3,7 +3,7 @@ import "dotenv/config";
 import { Env } from "./types";
 
 export const env: Env = {
-  APP_NAME: "nodejs-authentication-service",
+  APP_NAME: "nodejs-user-management-service",
   PROTOCOL: ENV.APP_PROTOCOL || "http",
   HOST: ENV.APP_HOST || "localhost",
   PORT: Number.parseInt(ENV.APP_PORT || "3000"),
@@ -12,7 +12,7 @@ export const env: Env = {
   MONGO_PASSWORD: ENV.MONGO_PASSWORD || "password",
   MONGO_HOST: ENV.MONGO_HOST || "localhost",
   MONGO_PORT: Number.parseInt(ENV.MONGO_PORT || "27017"),
-  MONGO_DATABASE: ENV.MONGO_DATABASE || "authentication",
+  MONGO_DATABASE: ENV.MONGO_DATABASE || "user_management",
   MONGO_URI: "",
 };
 
