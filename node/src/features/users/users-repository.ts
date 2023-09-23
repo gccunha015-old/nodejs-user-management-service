@@ -13,7 +13,7 @@ export class UsersRepository implements IUsersRepository {
 
   async findById(id: string): Promise<User> {
     const user = await this._usersCollection.findOne<User>(
-      { externalId: new UUID(id) },
+      { external_id: new UUID(id) },
       { projection: { _id: 0 } }
     );
     if (!user) throw new Error(`User with id ${id} doesn't exist`);
@@ -27,9 +27,8 @@ export class UsersRepository implements IUsersRepository {
   }
 
   async create(newUser: User): Promise<User> {
-    newUser.externalId = new UUID(newUser.externalId);
-    await this._usersCollection.insertOne();
-    return this.findById(newUser.externalId);
+    await this._usersCollection.insertOne(newUser);
+    return this.findById(newUser.external_id.toHexString());
   }
 }
 

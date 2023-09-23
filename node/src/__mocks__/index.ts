@@ -1,3 +1,3 @@
-export * from "./express-doubles";
-export * from "./mongo-doubles";
+export { expressSpies } from "./express";
+export { mongoSpies } from "./mongodb";
 export * from "./zod-doubles";

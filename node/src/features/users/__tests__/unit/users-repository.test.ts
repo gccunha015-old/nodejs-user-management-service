@@ -1,5 +1,4 @@
-import { Collection, FindCursor } from "mongodb";
-import { mongoMocks } from "../../../../__mocks__";
+import { Collection, FindCursor, UUID } from "mongodb";
 import { database } from "../../../../database/mongo-database";
 import { User } from "../../types";
 import { UsersRepository } from "../../users-repository";
@@ -7,13 +6,13 @@ import { UsersRepository } from "../../users-repository";
 jest.unmock("../../users-repository");
 describe("Unit Testing | UsersRepository", () => {
   const mocks = {} as {
-    findCursor: jest.MockedObject<FindCursor>;
+    findCursor: jest.MockedObjectDeep<FindCursor>;
     usersCollection: jest.MockedObjectDeep<Collection<User>>;
   };
   const sut = {} as { repository: UsersRepository };
 
   beforeAll(() => {
-    mocks.findCursor = mongoMocks.createFindCursor();
+    mocks.findCursor = jest.mocked(new FindCursor());
     mocks.usersCollection = jest.mocked(database.collection(""));
     mocks.usersCollection.find.mockReturnValue(mocks.findCursor);
     sut.repository = new UsersRepository(mocks.usersCollection);
@@ -98,7 +97,7 @@ describe("Unit Testing | UsersRepository", () => {
     it("should call usersCollection.insertOne and usersRepository.findById", async () => {
       const input = {} as { user: User };
       async function arrange() {
-        input.user = {} as User;
+        input.user = { external_id: new UUID() } as User;
       }
       async function act() {
         await sut.repository.create(input.user);

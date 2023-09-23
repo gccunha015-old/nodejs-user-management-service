@@ -1,8 +1,5 @@
 import { Request } from "express";
-import {
-  expressMocks,
-  expressSpies,
-} from "../../../../__mocks__/express-doubles";
+import { expressSpies } from "../../../../__mocks__";
 import { uuidSchema } from "../../../../utils";
 import { UsersController } from "../../users-controller";
 import { UsersService } from "../../users-service";
@@ -44,7 +41,7 @@ describe("Unit Testing | UsersController", () => {
         await sut.controller.findById(
           suiteInputs.request,
           expressSpies.response,
-          expressMocks.nextFunction
+          expressSpies.nextFunction
         );
       }
       async function assert() {
@@ -71,14 +68,14 @@ describe("Unit Testing | UsersController", () => {
         await sut.controller.findById(
           suiteInputs.request,
           expressSpies.response,
-          expressMocks.nextFunction
+          expressSpies.nextFunction
         );
       }
       async function assert() {
         expect(suiteMocks.uuidSchema.parseAsync).toHaveBeenLastCalledWith(
           suiteInputs.request.params.id
         );
-        expect(expressMocks.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
           testStubReturns.uuidSchema.parseAsync
         );
       }
@@ -100,7 +97,7 @@ describe("Unit Testing | UsersController", () => {
         await sut.controller.findAll(
           suiteInputs.request,
           expressSpies.response,
-          expressMocks.nextFunction
+          expressSpies.nextFunction
         );
       }
       async function assert() {
@@ -124,12 +121,12 @@ describe("Unit Testing | UsersController", () => {
         await sut.controller.findAll(
           suiteInputs.request,
           expressSpies.response,
-          expressMocks.nextFunction
+          expressSpies.nextFunction
         );
       }
       async function assert() {
         expect(mocks.usersService.findAll).toHaveBeenCalledTimes(1);
-        expect(expressMocks.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
           testStubReturns.usersService.findAll
         );
       }
@@ -159,7 +156,7 @@ describe("Unit Testing | UsersController", () => {
       };
       async function arrange() {
         testStubReturns.createUserDtoTransform = {
-          parseAsync: { id: "0" } as FindUserDto,
+          parseAsync: { id: {} } as FindUserDto,
         };
         mocks.usersService.create.mockResolvedValueOnce(
           testStubReturns.createUserDtoTransform.parseAsync
@@ -169,7 +166,7 @@ describe("Unit Testing | UsersController", () => {
         await sut.controller.create(
           suiteInputs.request,
           expressSpies.response,
-          expressMocks.nextFunction
+          expressSpies.nextFunction
         );
       }
       async function assert() {
@@ -199,14 +196,14 @@ describe("Unit Testing | UsersController", () => {
         await sut.controller.create(
           suiteInputs.request,
           expressSpies.response,
-          expressMocks.nextFunction
+          expressSpies.nextFunction
         );
       }
       async function assert() {
         expect(
           suiteMocks.createUserDtoTransform.parseAsync
         ).toHaveBeenLastCalledWith(suiteInputs.request.body);
-        expect(expressMocks.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
           testStubReturns.createUserDtoTransform.parseAsync
         );
       }

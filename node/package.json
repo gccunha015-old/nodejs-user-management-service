@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "nodejs-user-management-service",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",

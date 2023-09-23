@@ -5,7 +5,7 @@
 GET {{users}}
 
 ###
-@userId = 78b6814e-15db-4d5d-961f-4c2757633e57
+@userId = a9ad9952-e3bf-4e02-a586-f68805628514
 GET {{users}}/{{userId}}
 
 ###

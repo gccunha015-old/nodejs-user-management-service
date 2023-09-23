@@ -159,7 +159,7 @@ db.createCollection("users", {
     },
   },
 });
-db.users.createIndex({ email: 1, external_id: 1 }, { unique: true });
+db.users.createIndex({ email: 1 }, { unique: true });
 db.users.createIndex({ external_id: 1 }, { unique: true });
 db.users.insertOne({
   external_id: UUID(),
