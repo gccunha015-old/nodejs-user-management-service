@@ -13,7 +13,7 @@ jest.deepUnmock("../../users-repository");
 jest.deepUnmock("../../users-service");
 jest.deepUnmock("../../users-controller");
 describe("Integration Testing | UsersController", () => {
-  const spies = {} as { toHexString: jest.SpyInstance };
+  const spies = {} as { uuid: jest.MockedObjectDeep<UUID> };
   const mocks = {} as {
     findCursor: jest.MockedObject<FindCursor>;
     usersCollection: jest.MockedObjectDeep<Collection<User>>;
@@ -25,12 +25,12 @@ describe("Integration Testing | UsersController", () => {
   };
   const data = {} as {
     id: string;
-    uuid: UUID;
     user: User;
     findUserDto: FindUserDto;
   };
 
   beforeAll(() => {
+    spies.uuid = jest.mocked(new UUID());
     mocks.findCursor = jest.mocked(new FindCursor());
     mocks.usersCollection = jest.mocked(database.collection(""));
     mocks.usersCollection.find.mockReturnValue(mocks.findCursor);
@@ -38,28 +38,29 @@ describe("Integration Testing | UsersController", () => {
     sut.usersService = new UsersService(sut.usersRepository);
     sut.usersController = new UsersController(sut.usersService);
     data.id = randomUUID();
-    data.uuid = new UUID(data.id);
     data.user = {
-      external_id: data.uuid,
+      external_id: spies.uuid,
       created_at: new Date(),
       email: "test@test.com",
       password: "password",
       sessions: [],
       roles: [],
     };
-    data.findUserDto = (({ created_at: createdAt, ...rest }: User) => ({
+    data.findUserDto = (({
+      external_id,
+      created_at: createdAt,
+      ...rest
+    }: User) => ({
       id: data.id,
       createdAt,
       ...rest,
     }))(data.user);
-    spies.toHexString = jest.spyOn(data.uuid, "toHexString");
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  /*
   describe("findById", () => {
     const suiteInputs = {} as { request: Request };
 
@@ -72,6 +73,7 @@ describe("Integration Testing | UsersController", () => {
     it("when request contains valid params, should respond with status OK and json of user", async () => {
       async function arrange() {
         mocks.usersCollection.findOne.mockResolvedValueOnce(data.user);
+        spies.uuid.toHexString.mockReturnValueOnce(data.id);
       }
       async function act() {
         await sut.usersController.findById(
@@ -167,7 +169,6 @@ describe("Integration Testing | UsersController", () => {
       );
     });
   });
-  */
 
   describe("create", () => {
     const suiteInputs = {} as { request: Request };
@@ -181,7 +182,7 @@ describe("Integration Testing | UsersController", () => {
     it("when request contains valid body, should respond with status CREATED, json of created user and location with it's id", async () => {
       async function arrange() {
         mocks.usersCollection.findOne.mockResolvedValueOnce(data.user);
-        spies.toHexString.mockReturnValueOnce(data.id);
+        spies.uuid.toHexString.mockReturnValueOnce(data.id);
       }
       async function act() {
         await sut.usersController.create(
@@ -205,7 +206,6 @@ describe("Integration Testing | UsersController", () => {
       await arrange().then(act).then(assert);
     });
 
-    /*
     it("when request contains invalid body, should call next with Error", async () => {
       const input = {} as { request: Request };
       async function arrange() {
@@ -228,6 +228,5 @@ describe("Integration Testing | UsersController", () => {
 
       await arrange().then(act).then(assert);
     });
-    */
   });
 });

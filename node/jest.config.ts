@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
   testEnvironment: "node",
   setupFiles: ["./jest/setup.jest.ts"],
   cache: true,
-  verbose: true,
+  verbose: false,
   automock: true,
   bail: 1,
   rootDir: ".",

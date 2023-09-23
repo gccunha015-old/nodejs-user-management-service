@@ -80,12 +80,12 @@ describe("Unit Testing | ProcessEventsHandler", () => {
       expect(mocks.databaseClient.close).toHaveBeenCalledTimes(1);
     });
 
-    it("when an uncaughtException occurs, should call the attached listerner", () => {
+    it("when an uncaughtException occurs, should call the attached listener", () => {
       suiteCalls.process.on[0].listener();
       expect(spies.console.log).toHaveBeenCalledTimes(1);
     });
 
-    it("when an unhandledRejection occurs, should call the attached listerner", () => {
+    it("when an unhandledRejection occurs, should call the attached listener", () => {
       suiteCalls.process.on[1].listener();
       expect(spies.console.log).toHaveBeenCalledTimes(1);
     });
