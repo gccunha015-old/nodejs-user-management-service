@@ -4,6 +4,8 @@ import {
   IUsersRepository,
   CreateUserDto,
   FindUserDto,
+  UpdateUserDto,
+  User,
 } from "./types";
 import { usersRepository } from "./users-repository";
 
@@ -15,7 +17,7 @@ export class UsersService implements IUsersService {
   }
 
   async findById(id: string): Promise<FindUserDto> {
-    const user = await this._repository.findById(id);
+    const user = await this._findById(id);
     return await findUserDtoTransform.parseAsync(user);
   }
 
@@ -30,6 +32,17 @@ export class UsersService implements IUsersService {
     const newUser = await userSchema.parseAsync(createUserDto);
     const user = await this._repository.create(newUser);
     return await findUserDtoTransform.parseAsync(user);
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<FindUserDto> {
+    // If a property is undefined, will it overwrite?
+    const user: User = { ...(await this._findById(id)), ...updateUserDto };
+    const updatedUser = await this._repository.update(user);
+    return await findUserDtoTransform.parseAsync(updatedUser);
+  }
+
+  private async _findById(id: string): Promise<User> {
+    return this._repository.findById(id);
   }
 }
 
