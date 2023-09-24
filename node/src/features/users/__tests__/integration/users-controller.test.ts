@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Collection, FindCursor, UUID } from "mongodb";
 import { Request } from "express";
-import { expressSpies, mongoSpies } from "../../../../__mocks__";
+import { expressDoubles } from "../../../../__mocks__";
 import { database } from "../../../../database/mongo-database";
 import { FindUserDto, User } from "../../types";
 import { UsersRepository } from "../../users-repository";
@@ -78,15 +78,15 @@ describe("Integration Testing | UsersController", () => {
       async function act() {
         await sut.usersController.findById(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
-        expect(expressSpies.response.status).toHaveBeenLastCalledWith(
+        expect(expressDoubles.response.status).toHaveBeenLastCalledWith(
           StatusCodes.OK
         );
-        expect(expressSpies.response.json).toHaveBeenLastCalledWith(
+        expect(expressDoubles.response.json).toHaveBeenLastCalledWith(
           data.findUserDto
         );
       }
@@ -104,12 +104,12 @@ describe("Integration Testing | UsersController", () => {
       async function act() {
         await sut.usersController.findById(
           testInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
-        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressDoubles.nextFunction).toHaveBeenLastCalledWith(
           expect.any(Error)
         );
       }
@@ -149,15 +149,15 @@ describe("Integration Testing | UsersController", () => {
           async function act() {
             await sut.usersController.findAll(
               suiteInputs.request,
-              expressSpies.response,
-              expressSpies.nextFunction
+              expressDoubles.response,
+              expressDoubles.nextFunction
             );
           }
           async function assert() {
-            expect(expressSpies.response.status).toHaveBeenLastCalledWith(
+            expect(expressDoubles.response.status).toHaveBeenLastCalledWith(
               StatusCodes.OK
             );
-            expect(expressSpies.response.json).toHaveBeenLastCalledWith(
+            expect(expressDoubles.response.json).toHaveBeenLastCalledWith(
               expect.objectContaining<Pick<Array<FindUserDto>, "length">>({
                 length: findCursorReturn.length,
               })
@@ -187,18 +187,18 @@ describe("Integration Testing | UsersController", () => {
       async function act() {
         await sut.usersController.create(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
-        expect(expressSpies.response.status).toHaveBeenLastCalledWith(
+        expect(expressDoubles.response.status).toHaveBeenLastCalledWith(
           StatusCodes.CREATED
         );
-        expect(expressSpies.response.location).toHaveBeenLastCalledWith(
+        expect(expressDoubles.response.location).toHaveBeenLastCalledWith(
           expect.stringMatching(data.id)
         );
-        expect(expressSpies.response.json).toHaveBeenLastCalledWith(
+        expect(expressDoubles.response.json).toHaveBeenLastCalledWith(
           data.findUserDto
         );
       }
@@ -216,12 +216,12 @@ describe("Integration Testing | UsersController", () => {
       async function act() {
         await sut.usersController.create(
           input.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
-        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressDoubles.nextFunction).toHaveBeenLastCalledWith(
           expect.any(Error)
         );
       }

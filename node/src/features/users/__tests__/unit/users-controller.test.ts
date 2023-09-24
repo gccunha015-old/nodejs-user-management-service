@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { expressSpies } from "../../../../__mocks__";
+import { expressDoubles } from "../../../../__mocks__";
 import { uuidSchema } from "../../../../utils";
 import { UsersController } from "../../users-controller";
 import { UsersService } from "../../users-service";
@@ -40,8 +40,8 @@ describe("Unit Testing | UsersController", () => {
       async function act() {
         await sut.controller.findById(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
@@ -49,8 +49,8 @@ describe("Unit Testing | UsersController", () => {
           suiteInputs.request.params.id
         );
         expect(mocks.usersService.findById).toHaveBeenCalledTimes(1);
-        expect(expressSpies.response.status).toHaveBeenCalledTimes(1);
-        expect(expressSpies.response.json).toHaveBeenCalledTimes(1);
+        expect(expressDoubles.response.status).toHaveBeenCalledTimes(1);
+        expect(expressDoubles.response.json).toHaveBeenCalledTimes(1);
       }
 
       await arrange().then(act).then(assert);
@@ -67,15 +67,15 @@ describe("Unit Testing | UsersController", () => {
       async function act() {
         await sut.controller.findById(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
         expect(suiteMocks.uuidSchema.parseAsync).toHaveBeenLastCalledWith(
           suiteInputs.request.params.id
         );
-        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressDoubles.nextFunction).toHaveBeenLastCalledWith(
           testStubReturns.uuidSchema.parseAsync
         );
       }
@@ -96,14 +96,14 @@ describe("Unit Testing | UsersController", () => {
       async function act() {
         await sut.controller.findAll(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
         expect(mocks.usersService.findAll).toHaveBeenCalledTimes(1);
-        expect(expressSpies.response.status).toHaveBeenCalledTimes(1);
-        expect(expressSpies.response.json).toHaveBeenCalledTimes(1);
+        expect(expressDoubles.response.status).toHaveBeenCalledTimes(1);
+        expect(expressDoubles.response.json).toHaveBeenCalledTimes(1);
       }
 
       await arrange().then(act).then(assert);
@@ -120,13 +120,13 @@ describe("Unit Testing | UsersController", () => {
       async function act() {
         await sut.controller.findAll(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
         expect(mocks.usersService.findAll).toHaveBeenCalledTimes(1);
-        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressDoubles.nextFunction).toHaveBeenLastCalledWith(
           testStubReturns.usersService.findAll
         );
       }
@@ -165,8 +165,8 @@ describe("Unit Testing | UsersController", () => {
       async function act() {
         await sut.controller.create(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
@@ -174,9 +174,9 @@ describe("Unit Testing | UsersController", () => {
           suiteMocks.createUserDtoTransform.parseAsync
         ).toHaveBeenLastCalledWith(suiteInputs.request.body);
         expect(mocks.usersService.create).toHaveBeenCalledTimes(1);
-        expect(expressSpies.response.status).toHaveBeenCalledTimes(1);
-        expect(expressSpies.response.location).toHaveBeenCalledTimes(1);
-        expect(expressSpies.response.json).toHaveBeenCalledTimes(1);
+        expect(expressDoubles.response.status).toHaveBeenCalledTimes(1);
+        expect(expressDoubles.response.location).toHaveBeenCalledTimes(1);
+        expect(expressDoubles.response.json).toHaveBeenCalledTimes(1);
       }
 
       await arrange().then(act).then(assert);
@@ -195,15 +195,15 @@ describe("Unit Testing | UsersController", () => {
       async function act() {
         await sut.controller.create(
           suiteInputs.request,
-          expressSpies.response,
-          expressSpies.nextFunction
+          expressDoubles.response,
+          expressDoubles.nextFunction
         );
       }
       async function assert() {
         expect(
           suiteMocks.createUserDtoTransform.parseAsync
         ).toHaveBeenLastCalledWith(suiteInputs.request.body);
-        expect(expressSpies.nextFunction).toHaveBeenLastCalledWith(
+        expect(expressDoubles.nextFunction).toHaveBeenLastCalledWith(
           testStubReturns.createUserDtoTransform.parseAsync
         );
       }

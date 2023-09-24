@@ -16,5 +16,3 @@ export class MongoClient {
   db = jest.fn().mockImplementation(() => new Db());
   close = jest.fn();
 }
-
-export const mongoSpies = {};

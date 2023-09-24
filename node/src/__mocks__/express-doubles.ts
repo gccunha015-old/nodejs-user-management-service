@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 
-export const expressSpies = {
+export const expressDoubles = {
   nextFunction: jest.fn() as jest.MockedFunction<NextFunction>,
   response: {
     status: jest.fn().mockReturnThis(),
