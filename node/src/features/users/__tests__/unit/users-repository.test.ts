@@ -112,4 +112,38 @@ describe("Unit Testing | UsersRepository", () => {
       await arrange().then(act).then(assert);
     });
   });
+
+  describe("update", () => {
+    const suiteSpies = {} as { repository: { findById: jest.SpyInstance } };
+
+    beforeAll(() => {
+      suiteSpies.repository = {
+        findById: jest.spyOn(sut.repository, "findById").mockImplementation(),
+      };
+    });
+
+    afterAll(() => {
+      suiteSpies.repository.findById.mockRestore();
+    });
+
+    it("should call usersCollection.updateOne and usersRepository.findById", async () => {
+      const input = {} as { user: User };
+      async function arrange() {
+        input.user = { external_id: new UUID() } as User;
+      }
+      async function act() {
+        await sut.repository.update(input.user);
+      }
+      async function assert() {
+        const { external_id, email, password, sessions, roles } = input.user;
+        expect(mocks.usersCollection.updateOne).toHaveBeenLastCalledWith(
+          { external_id },
+          { $set: { email, password, sessions, roles } }
+        );
+        expect(suiteSpies.repository.findById).toHaveBeenCalledTimes(1);
+      }
+
+      await arrange().then(act).then(assert);
+    });
+  });
 });

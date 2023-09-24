@@ -1,38 +1,27 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 
-interface IRead<ID, ENTITY> {
-  findAll(): Promise<ENTITY[]>;
-  findById(id: ID): Promise<ENTITY>;
+interface IRead<ID, OUTPUT> {
+  findAll(): Promise<OUTPUT[]>;
+  findById(id: ID): Promise<OUTPUT>;
 }
 
-interface IWrite<ENTITY, NEW_ENTITY> {
-  create(newEntity: NEW_ENTITY): Promise<ENTITY>;
+interface IWrite<OUTPUT, INPUT> {
+  create(newEntity: INPUT): Promise<OUTPUT>;
+  update(entityToUpdate: INPUT): Promise<OUTPUT>;
 }
 
-interface IReadWrite<ID, ENTITY, NEW_ENTITY>
-  extends IRead<ID, ENTITY>,
-    IWrite<ENTITY, NEW_ENTITY> {}
+interface IReadWrite<ID, OUTPUT, INPUT>
+  extends IRead<ID, OUTPUT>,
+    IWrite<OUTPUT, INPUT> {}
 
-export interface IRepository<ID, ENTITY>
-  extends IReadWrite<ID, ENTITY, ENTITY> {}
+export interface IRepository<ID, OUTPUT>
+  extends IReadWrite<ID, OUTPUT, OUTPUT> {}
 
-export interface IService<ID, ENTITY, CREATE_DTO>
-  extends IReadWrite<ID, ENTITY, CREATE_DTO> {}
+export interface IService<ID, OUTPUT, INPUT>
+  extends IReadWrite<ID, OUTPUT, INPUT> {}
 
 export interface IController {
-  findAll(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ): Promise<void>;
-  findById(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ): Promise<void>;
-  create(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ): Promise<void>;
+  findById: RequestHandler;
+  findAll: RequestHandler;
+  create: RequestHandler;
 }

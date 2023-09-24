@@ -48,12 +48,14 @@ REST API service to manage users.
   </li>
   <li>⬜ Implement, test and document API
     <ul type="none">
-      <li>⬜ User routes
+      <li>⬜ User feature
         <ul type="none">
+          <li>⬜ Implementation</li>
           <li>⬜ Unit testing</li>
-          <li>⬜ Integration testing with Server</li>
+          <li>⬜ Integration testing</li>
         </ul>
       </li>
+      <li>⬜ E2E testing</li>
       <li>⬜ Add Swagger on route <code>/docs</code></li>
     </ul>
   </li>

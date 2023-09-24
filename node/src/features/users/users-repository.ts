@@ -30,6 +30,27 @@ export class UsersRepository implements IUsersRepository {
     await this._usersCollection.insertOne(newUser);
     return this.findById(newUser.external_id.toHexString());
   }
+
+  async update({
+    external_id,
+    email,
+    password,
+    sessions,
+    roles,
+  }: User): Promise<User> {
+    await this._usersCollection.updateOne(
+      { external_id },
+      {
+        $set: {
+          email,
+          password,
+          sessions,
+          roles,
+        },
+      }
+    );
+    return this.findById(external_id.toHexString());
+  }
 }
 
 export const usersRepository = new UsersRepository();
