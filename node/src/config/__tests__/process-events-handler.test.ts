@@ -3,7 +3,6 @@ import { MongoClient } from "mongodb";
 import { mongoClient } from "../../database";
 import { ProcessEventsHandler } from "../process-events-handler";
 
-jest.unmock("../process-events-handler");
 describe("Unit Testing | ProcessEventsHandler", () => {
   const spies = {} as {
     process: {
@@ -31,6 +30,7 @@ describe("Unit Testing | ProcessEventsHandler", () => {
       .fn()
       .mockImplementation((callback) => callback());
     mocks.databaseClient = jest.mocked(mongoClient);
+    mocks.databaseClient.close = jest.fn();
     sut.processEventsHandler = new ProcessEventsHandler(
       mocks.httpServer,
       mocks.databaseClient
