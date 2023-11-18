@@ -1,5 +1,7 @@
 # Node.js User Management Service
 
+# This repository is ARCHIVED
+
 <div align="center">
   <a href="https://whimsical.com/container-QS8DUbdZoHU8K8DAZrAfww">
     <img src="_docs/diagrams/container.png" height="600"
